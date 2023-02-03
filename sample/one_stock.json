@@ -1,0 +1,12 @@
+{
+    "status": 0,
+    "msg": "ok",
+    "data": {
+        "id": 1,
+        "date": "2022-12-30 13:40",
+        "user_name": "Jack",
+        "approve_date": "2022-12-30 13:40",
+        "approve_user": "Admin",
+        "status": "schedule"
+    }
+}

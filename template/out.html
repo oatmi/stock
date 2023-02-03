@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>出库管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="stylesheet" href="./sdk/sdk.css" />
+    <link rel="stylesheet" href="./sdk/helper.css" />
+    <link rel="stylesheet" href="./sdk/iconfont.css" />
+    <style>
+      html,
+      body,
+      .app-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="root" class="app-wrapper"></div>
+    
+    <script src="./sdk/sdk.js"></script>
+    <script type="text/javascript">
+      (function () {
+        let amis = amisRequire("amis/embed");
+        let amisJSON = {
+            "type": "page",
+            "data":
+            {
+                "nav":
+                [
+                    {
+                        "label": "库存管理",
+                        "to": "/docs/index",
+                        "icon": "fa fa-boxes-stacked"
+                    },
+                    {
+                        "label": "入库管理",
+                        "to": "/docs/api",
+                        "icon": "fa fa-inbox"
+                    },
+                    {
+                        "label": "出库管理",
+                        "to": "/docs/renderers",
+                        "icon": "fa fa-right-from-bracket"
+                    },
+                    {
+                        "label": "定价管理",
+                        "to": "/docs/renderers",
+                        "icon": "fa fa-tag"
+                    }
+                ]
+            },
+            "body":
+            [
+                {
+                    "type": "nav",
+                    "stacked": false,
+                    "source": "${nav}"
+                },
+                {
+                    "type": "crud",
+                    "api": "http://127.0.0.1:8000/sample_in.json",
+                    "syncLocation": false,
+                    "autoGenerateFilter": true,
+                    "headerToolbar":
+                    [
+                        {
+                            "label": "出库申请",
+                            "type": "button",
+                            "align": "left",
+                            "actionType": "dialog",
+                            "icon": "fa fa-plus",
+                            "dialog": {
+                                "type": "form",
+                                "size": "full",
+                                "api": "post:/amis/api/mock2/sample",
+                                "body": [
+                                    {
+                                        "type": "combo",
+                                        "name": "combo",
+                                        "strictMode": false,
+                                        "addable": true,
+                                        "multiple": true,
+                                        "label": "版本明细",
+                                        "items":
+                                        [
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "货品名称"
+                                            },
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "货品类型"
+                                            },
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "规格型号"
+                                            },
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "单位"
+                                            },
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "入库批号"
+                                            },
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "生产日期"
+                                            },
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "库存量"
+                                            },
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "进货量"
+                                            },
+                                            {
+                                                "type": "input-text",
+                                                "name": "engine",
+                                                "label": "出货量"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "columns-toggler",
+                            "align": "left",
+                            "draggable": true,
+                            "icon": "fas fa-cog",
+                            "overlay": true,
+                            "footerBtnSize": "sm"
+                        }
+                    ],
+                    "columns":
+                    [
+                        {
+                            "name": "id",
+                            "label": "编号",
+                        },
+                        {
+                            "name": "date",
+                            "label": "申请时间",
+                            "searchable":
+                            {
+                                "type": "input-datetime-range",
+                                "name": "date",
+                                "label": "申请时间",
+                            }
+                        },
+                        {
+                            "name": "user_name",
+                            "label": "申请人",
+                            "searchable":
+                            {
+                                "type": "select",
+                                "name": "user_name",
+                                "label": "主键",
+                                "label": "申请人",
+                                "options":
+                                [
+                                    {
+                                        "label": "Internet Explorer ",
+                                        "value": "ie"
+                                    },
+                                    {
+                                        "label": "AOL browser",
+                                        "value": "aol"
+                                    },
+                                    {
+                                        "label": "Firefox",
+                                        "value": "firefox"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "name": "approve_date",
+                            "label": "审核时间"
+                        },
+                        {
+                            "name": "approve_user",
+                            "label": "审核人"
+                        },
+                        {
+                            "name": "status",
+                            "label": "状态",
+                            "type": "mapping",
+                            "map": {
+                                "*": {
+                                    "type": "status",
+                                    "labelMap": {
+                                        "schedule": "待审核",
+                                        "fail": "审核拒绝",
+                                        "success": "审核通过",
+                                    }
+                                },
+                            },
+                            "searchable":
+                            {
+                                "type": "select",
+                                "name": "status",
+                                "label": "状态",
+                                "options":
+                                [
+                                    {
+                                        "label": "Internet Explorer ",
+                                        "value": "ie"
+                                    },
+                                    {
+                                        "label": "AOL browser",
+                                        "value": "aol"
+                                    },
+                                    {
+                                        "label": "Firefox",
+                                        "value": "firefox"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "operation",
+                            "label": "操作",
+                            "buttons": [
+                                {
+                                    "label": "修改",
+                                    "type": "button",
+                                    "actionType": "dialog",
+                                    "icon": "fa-regular fa-pen-to-square",
+                                    "dialog": {
+                                        "title": "修改申请单",
+                                        "size": "full",
+                                        "body": {
+                                            "type": "form",
+                                            "initApi": "http://127.0.0.1:8000/one_stock.json",
+                                            "api": "post:/amis/api/mock2/sample/${id}",
+                                            "body": [
+                                                {
+                                                    "type": "combo",
+                                                    "name": "combo",
+                                                    "strictMode": false,
+                                                    "addable": true,
+                                                    "multiple": true,
+                                                    "label": "版本明细",
+                                                    "items":
+                                                    [
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "货品名称"
+                                                        },
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "货品类型"
+                                                        },
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "规格型号"
+                                                        },
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "单位"
+                                                        },
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "入库批号"
+                                                        },
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "生产日期"
+                                                        },
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "库存量"
+                                                        },
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "进货量"
+                                                        },
+                                                        {
+                                                            "type": "input-text",
+                                                            "name": "engine",
+                                                            "label": "出货量"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "label": "审核",
+                                    "type": "button",
+                                    "actionType": "dialog",
+                                    "icon": "fa-solid fa-person-circle-check",
+                                    "dialog": {
+                                        "title": "审核结论",
+                                        "body":
+                                        {
+                                            "type": "form",
+                                            "api": "/amis/api/mock2/form/saveForm?waitSeconds=2",
+                                            "body":
+                                            [
+                                                {
+                                                    "type": "switch",
+                                                    "name": "status",
+                                                    "inputClassName": "is-inline",
+                                                    "label": "审核结论",
+                                                    "onText": "通过",
+                                                    "offText": "不通过"
+                                                },
+                                                {
+                                                    "type": "input-text",
+                                                    "name": "comment",
+                                                    "label": "备注",
+                                                    "placeholder": "请输入备注"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                }
+            ]
+        }
+        let amisScoped = amis.embed("#root", amisJSON);
+      })();
+    </script>
+  </body>
+</html>
