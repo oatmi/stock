@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/oatmi/stock/data"
+	"github.com/oatmi/stock/handlers"
 )
 
 func main() {
@@ -19,10 +21,13 @@ func main() {
 
 	api := router.Group("/api")
 	{
-		api.GET("/home", func(c *gin.Context) {})
+		api.GET("/home", handlers.GetStocks)
 	}
 
 	router.Static("/sdk", "./sdk")
+
+	// start sqlite connection
+	data.SqliteMustInit()
 
 	router.Run("0.0.0.0:8080")
 }

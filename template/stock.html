@@ -115,6 +115,21 @@
                             }
                         },
                         {
+                            "name": "product_type",
+                            "label": "成品类型",
+                            "searchable":
+                            {
+                                "type": "select",
+                                "name": "product_type",
+                                "label": "成品类型",
+                                "options":
+                                [
+                                    { "label": "原材料", "value": "1" },
+                                    { "label": "成品", "value": "2" },
+                                ]
+                            }
+                        },
+                        {
                             "name": "type",
                             "label": "货品类型",
                             "searchable":
@@ -176,19 +191,31 @@
                             "label": "生产批号",
                         },
                         {
-                            "name": "platform",
+                            "name": "produce_date",
                             "label": "生产日期",
                             "searchable":
                             {
                                 "type": "input-date",
-                                "name": "platform",
+                                "name": "produce_date",
                                 "label": "生产日期",
                                 "format": "YYYY-MM-DD"
                             }
                         },
                         {
-                            "name": "platform",
-                            "label": "库存量"
+                            "name": "stock_date",
+                            "label": "入库时间"
+                        },
+                        {
+                            "name": "stock_num",
+                            "label": "入库数量"
+                        },
+                        {
+                            "name": "current_num",
+                            "label": "当前数量"
+                        },
+                        {
+                            "name": "value",
+                            "label": "当前价值"
                         },
                     ],
                 }
