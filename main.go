@@ -28,6 +28,10 @@ func main() {
 
 	// start sqlite connection
 	data.SqliteMustInit()
+	// query := sqlite.New(data.Sqlite3)
+	// l, err := query.ListAuthors(ctx)
+	// fmt.Printf("debug: %+v\n", l)
+	// fmt.Printf("debug: %+v\n", err)
 
 	router.Run("0.0.0.0:8080")
 }

@@ -65,7 +65,7 @@
                 },
                 {
                     "type": "crud",
-                    "api": "http://127.0.0.1:8000/sample.json",
+                    "api": "http://127.0.0.1:8080/api/home",
                     "syncLocation": false,
                     "autoGenerateFilter": true,
                     "headerToolbar":
@@ -105,22 +105,28 @@
                     "columns":
                     [
                         {
-                            "name": "name",
+                            "name": "Name",
                             "label": "货品名称",
                             "searchable":
                             {
                                 "type": "input-text",
-                                "name": "name",
+                                "name": "Name",
                                 "label": "货品名称",
                             }
                         },
                         {
-                            "name": "product_type",
+                            "name": "ProductType",
                             "label": "成品类型",
+                            "type": "mapping",
+                            "map": {
+                                "1": "<span class='label label-info'>原材料</span>",
+                                "2": "<span class='label label-success'>成品</span>",
+                                "*": "<span class='label label-warning'>其他</span>",
+                            },
                             "searchable":
                             {
                                 "type": "select",
-                                "name": "product_type",
+                                "name": "ProductType",
                                 "label": "成品类型",
                                 "options":
                                 [
