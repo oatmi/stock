@@ -1,8 +1,9 @@
 -- name: ListStocks :many
-SELECT * FROM stocks
+SELECT *
+FROM stocks
 WHERE
-    ($1 IS NULL OR name LIKE $1)
-ORDER BY id;
+  (name LIKE sqlc.narg('name') OR sqlc.narg('name') IS NULL) AND
+  (product_type = sqlc.narg('product_type') OR sqlc.narg('product_type') IS NULL);
 
 -- name: CountStocks :one
 SELECT count(*) FROM stocks;

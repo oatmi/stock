@@ -7,21 +7,21 @@ package sqlite
 import ()
 
 type Stock struct {
-	ID             int64
+	ID             int32
 	Name           string
-	ProductType    int64
-	Type           int64
+	ProductType    int32
+	Type           int32
 	Supplier       string
 	Model          string
 	Unit           string
-	Price          int64
+	Price          int32
 	BatchNoIn      string
 	WayIn          string
 	Location       string
 	BatchNoProduce string
 	ProduceDate    string
 	StockDate      string
-	StockNum       int64
-	CurrentNum     int64
-	Value          int64
+	StockNum       int32
+	CurrentNum     int32
+	Value          int32
 }

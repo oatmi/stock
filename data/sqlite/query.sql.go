@@ -7,6 +7,7 @@ package sqlite
 
 import (
 	"context"
+	"database/sql"
 )
 
 const countStocks = `-- name: CountStocks :one
@@ -21,32 +22,20 @@ func (q *Queries) CountStocks(ctx context.Context) (int64, error) {
 }
 
 const listStocks = `-- name: ListStocks :many
-SELECT id, name, product_type, type, supplier, model, unit, price, batch_no_in, way_in, location, batch_no_produce, produce_date, stock_date, stock_num, current_num, value FROM stocks
+SELECT id, name, product_type, type, supplier, model, unit, price, batch_no_in, way_in, location, batch_no_produce, produce_date, stock_date, stock_num, current_num, value
+FROM stocks
 WHERE
-    ($1 IS NULL OR $1 LIKE ) AND
-    product_type =    ? AND
-    Type         =    ? AND
-    produce_date =    ? AND
-    location    LIKE ?
-ORDER BY id
+  (name LIKE $1 OR $1 IS NULL) AND
+  (product_type = $2 OR $2 IS NULL)
 `
 
 type ListStocksParams struct {
-	Name        string
-	ProductType int64
-	Type        int64
-	ProduceDate string
-	Location    string
+	Name        sql.NullString
+	ProductType sql.NullInt32
 }
 
 func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock, error) {
-	rows, err := q.db.QueryContext(ctx, listStocks,
-		arg.Name,
-		arg.ProductType,
-		arg.Type,
-		arg.ProduceDate,
-		arg.Location,
-	)
+	rows, err := q.db.QueryContext(ctx, listStocks, arg.Name, arg.ProductType)
 	if err != nil {
 		return nil, err
 	}

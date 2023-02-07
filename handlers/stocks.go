@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
-	"github.com/spf13/cast"
 )
 
 type AisudaiResponse struct {
@@ -43,21 +43,24 @@ func GetStocks(c *gin.Context) {
 
 func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 	arg := sqlite.ListStocksParams{}
-	if val, ok := c.GetQuery("Name"); ok {
-		arg.Name = "%" + val + "%"
+	if val, ok := c.GetQuery("Name"); ok && val != "" {
+		arg.Name = sql.NullString{
+			String: "%" + val + "%",
+			Valid:  true,
+		}
 	}
-	if val, ok := c.GetQuery("ProductType"); ok {
-		arg.ProductType = cast.ToInt64(val)
-	}
-	if val, ok := c.GetQuery("Type"); ok {
-		arg.Type = cast.ToInt64(val)
-	}
-	if val, ok := c.GetQuery("ProduceDate"); ok {
-		arg.ProduceDate = val
-	}
-	if val, ok := c.GetQuery("Location"); ok {
-		arg.Location = val
-	}
+	// if val, ok := c.GetQuery("ProductType"); ok {
+	// 	arg.ProductType = cast.ToInt64(val)
+	// }
+	// if val, ok := c.GetQuery("Type"); ok {
+	// 	arg.Type = cast.ToInt64(val)
+	// }
+	// if val, ok := c.GetQuery("ProduceDate"); ok {
+	// 	arg.ProduceDate = val
+	// }
+	// if val, ok := c.GetQuery("Location"); ok {
+	// 	arg.Location = val
+	// }
 	fmt.Printf("debug: %+v\n", arg)
 	return arg
 }
