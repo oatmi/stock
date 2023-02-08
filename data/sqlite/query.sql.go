@@ -30,8 +30,8 @@ WHERE
 `
 
 type ListStocksParams struct {
-	Name        sql.NullString
-	ProductType sql.NullInt32
+	Name        sql.NullString `json:"name"`
+	ProductType sql.NullInt32  `json:"product_type"`
 }
 
 func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock, error) {

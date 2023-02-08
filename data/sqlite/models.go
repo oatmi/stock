@@ -7,21 +7,21 @@ package sqlite
 import ()
 
 type Stock struct {
-	ID             int32
-	Name           string
-	ProductType    int32
-	Type           int32
-	Supplier       string
-	Model          string
-	Unit           string
-	Price          int32
-	BatchNoIn      string
-	WayIn          string
-	Location       string
-	BatchNoProduce string
-	ProduceDate    string
-	StockDate      string
-	StockNum       int32
-	CurrentNum     int32
-	Value          int32
+	ID             int32  `json:"id"`
+	Name           string `json:"name"`
+	ProductType    int32  `json:"product_type"`
+	Type           int32  `json:"type"`
+	Supplier       string `json:"supplier"`
+	Model          string `json:"model"`
+	Unit           string `json:"unit"`
+	Price          int32  `json:"price"`
+	BatchNoIn      string `json:"batch_no_in"`
+	WayIn          string `json:"way_in"`
+	Location       string `json:"location"`
+	BatchNoProduce string `json:"batch_no_produce"`
+	ProduceDate    string `json:"produce_date"`
+	StockDate      string `json:"stock_date"`
+	StockNum       int32  `json:"stock_num"`
+	CurrentNum     int32  `json:"current_num"`
+	Value          int32  `json:"value"`
 }
