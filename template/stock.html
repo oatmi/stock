@@ -37,12 +37,12 @@
                 [
                     {
                         "label": "库存管理",
-                        "to": "/docs/index",
+                        "to": "/view/stock",
                         "icon": "fa fa-boxes-stacked"
                     },
                     {
                         "label": "入库管理",
-                        "to": "/docs/api",
+                        "to": "/view/in",
                         "icon": "fa fa-inbox"
                     },
                     {
@@ -65,7 +65,7 @@
                 },
                 {
                     "type": "crud",
-                    "api": "http://127.0.0.1:8080/api/home",
+                    "api": "/api/home",
                     "syncLocation": false,
                     "autoGenerateFilter": true,
                     "headerToolbar":
@@ -78,7 +78,7 @@
                             "icon": "fa fa-plus",
                             "dialog": {
                                 "type": "form",
-                                "api": "post:/amis/api/mock2/sample",
+                                "api": "post:/api/put/stock",
                                 "body": [
                                     {
                                         "type": "input-text",

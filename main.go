@@ -17,11 +17,14 @@ func main() {
 	view := router.Group("/view")
 	{
 		view.GET("/stock", func(c *gin.Context) { c.HTML(http.StatusOK, "stock.html", nil) })
+		view.GET("/in", func(c *gin.Context) { c.HTML(http.StatusOK, "in.html", nil) })
 	}
 
 	api := router.Group("/api")
 	{
 		api.GET("/home", handlers.GetStocks)
+		api.GET("/instock", handlers.GetApplications)
+		api.POST("/put/stock", handlers.PutStock)
 	}
 
 	router.Static("/sdk", "./sdk")

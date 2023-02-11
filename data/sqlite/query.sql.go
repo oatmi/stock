@@ -21,6 +21,59 @@ func (q *Queries) CountStocks(ctx context.Context) (int64, error) {
 	return count, err
 }
 
+const listApplications = `-- name: ListApplications :many
+SELECT id, application_date, approve_date, status, application_user, approve_user, create_date
+FROM stock_applications
+WHERE
+  (application_date >= $1 OR $1 IS NULL) AND
+  (application_date <= $2 OR $2 IS NULL) AND
+  (application_user = $3 OR $3 IS NULL) AND
+  (status = $4 OR $4 IS NULL)
+`
+
+type ListApplicationsParams struct {
+	ApplicationDateS sql.NullString `json:"application_date_s"`
+	ApplicationDateE sql.NullString `json:"application_date_e"`
+	ApplicationUser  sql.NullString `json:"application_user"`
+	Status           sql.NullInt32  `json:"status"`
+}
+
+func (q *Queries) ListApplications(ctx context.Context, arg ListApplicationsParams) ([]StockApplication, error) {
+	rows, err := q.db.QueryContext(ctx, listApplications,
+		arg.ApplicationDateS,
+		arg.ApplicationDateE,
+		arg.ApplicationUser,
+		arg.Status,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []StockApplication
+	for rows.Next() {
+		var i StockApplication
+		if err := rows.Scan(
+			&i.ID,
+			&i.ApplicationDate,
+			&i.ApproveDate,
+			&i.Status,
+			&i.ApplicationUser,
+			&i.ApproveUser,
+			&i.CreateDate,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listStocks = `-- name: ListStocks :many
 SELECT id, name, product_type, type, supplier, model, unit, price, batch_no_in, way_in, location, batch_no_produce, produce_date, stock_date, stock_num, current_num, value
 FROM stocks

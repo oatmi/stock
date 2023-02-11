@@ -17,3 +17,13 @@ CREATE TABLE stocks (
     current_num INTEGER NOT NULL, -- 当前数量
     value INTEGER NOT NULL -- 当前价值
 );
+
+CREATE TABLE stock_applications (
+	id INTEGER PRIMARY KEY,
+	application_date TEXT NOT NULL,
+	approve_date TEXT NOT NULL,
+    status INTEGER NOT NULL, -- 1: initiate, 2: wait approve, 3: prooved, 4: rejected
+	application_user TEXT NOT NULL,
+	approve_user TEXT NOT NULL,
+    create_date TEXT NOT NULL
+);

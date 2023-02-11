@@ -25,3 +25,13 @@ type Stock struct {
 	CurrentNum     int32  `json:"current_num"`
 	Value          int32  `json:"value"`
 }
+
+type StockApplication struct {
+	ID              int32  `json:"id"`
+	ApplicationDate string `json:"application_date"`
+	ApproveDate     string `json:"approve_date"`
+	Status          int32  `json:"status"`
+	ApplicationUser string `json:"application_user"`
+	ApproveUser     string `json:"approve_user"`
+	CreateDate      string `json:"create_date"`
+}
