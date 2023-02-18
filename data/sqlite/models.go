@@ -9,6 +9,7 @@ import ()
 type Stock struct {
 	ID             int32  `json:"id"`
 	Name           string `json:"name"`
+	Status         int32  `json:"status"`
 	ProductType    int32  `json:"product_type"`
 	Type           int32  `json:"type"`
 	Supplier       string `json:"supplier"`
@@ -29,9 +30,10 @@ type Stock struct {
 type StockApplication struct {
 	ID              int32  `json:"id"`
 	ApplicationDate string `json:"application_date"`
-	ApproveDate     string `json:"approve_date"`
+	BatchNoIn       string `json:"batch_no_in"`
 	Status          int32  `json:"status"`
 	ApplicationUser string `json:"application_user"`
 	ApproveUser     string `json:"approve_user"`
+	ApproveDate     string `json:"approve_date"`
 	CreateDate      string `json:"create_date"`
 }

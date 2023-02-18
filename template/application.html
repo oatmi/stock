@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>入库管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="stylesheet" href="/sdk/sdk.css" />
+    <link rel="stylesheet" href="/sdk/helper.css" />
+    <link rel="stylesheet" href="/sdk/iconfont.css" />
+    <style>
+      html,
+      body,
+      .app-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="root" class="app-wrapper"></div>
+    
+    <script src="/sdk/sdk.js"></script>
+    <script type="text/javascript">
+      (function () {
+        let amis = amisRequire("amis/embed");
+        let amisJSON = {
+            "type": "page",
+            "data":
+            {
+                "nav":
+                [
+                    {
+                        "label": "库存管理",
+                        "to": "/view/stock",
+                        "icon": "fa fa-boxes-stacked"
+                    },
+                    {
+                        "label": "入库管理",
+                        "to": "/view/in",
+                        "icon": "fa fa-inbox"
+                    },
+                    {
+                        "label": "出库管理",
+                        "to": "/docs/renderers",
+                        "icon": "fa fa-right-from-bracket"
+                    },
+                    {
+                        "label": "定价管理",
+                        "to": "/docs/renderers",
+                        "icon": "fa fa-tag"
+                    }
+                ]
+            },
+            "body":
+            [
+                {
+                    "type": "nav",
+                    "stacked": false,
+                    "source": "${nav}"
+                },
+                {
+                    "type": "form",
+                    "title": "入库申请",
+                    "api": "post:/api/put/stock",
+                    "body":  [
+                        {
+                            "type": "input-text",
+                            "name": "batch_no_in",
+                            "required": true,
+                            "label": "入库批号"
+                        },
+                        {
+                            "type": "combo",
+                            "name": "stock",
+                    		"columnCount": 2,
+                            "strictMode": false,
+                            "multiLine": true,
+                            "addable": true,
+                            "multiple": true,
+                            "tabsMode": true,
+                            "tabsStyle": "card",
+                            "label": "",
+                            "addButtonText": "添加货品",
+                            "items": [
+                            	{
+							        "type": "group",
+							        "body": [
+								        {
+		                                    "type": "input-text",
+		                                    "name": "name",
+		                                    "label": "货品名称",
+		                                    "required": true,
+		                                },
+							        	{
+		                                    "name": "product_type",
+		                                    "label": "成品类型",
+		                                    "type": "select",
+		                                    "required": true,
+		                                    "options": {
+		                                        "1": "原材料",
+		                                        "2": "成品",
+		                                    },
+		                                },
+		                                {
+		                                    "name": "type",
+		                                    "label": "货品类型",
+		                                    "type": "select",
+		                                    "required": true,
+		                                    "options": {
+		                                        "1": "其他",
+		                                        "2": "面料",
+		                                        "3": "双面胶",
+		                                        "4": "标签",
+		                                        "5": "胶条",
+		                                        "6": "包材",
+		                                        "7": "纸箱",
+		                                        "8": "口罩",
+		                                        "9": "采样器",
+		                                        "10": "线",
+		                                    },
+		                                },
+		                                {
+	                                    	"type": "input-text",
+		                                    "name": "supplier",
+		                                    "label": "供应商"
+		                                },
+							        ]
+							    },
+                                {
+							        "type": "group",
+							        "body": [
+							        	{
+		                                    "type": "input-text",
+		                                    "name": "model",
+		                                    "label": "规格型号"
+		                                },
+		                                {
+		                                    "type": "input-text",
+		                                    "name": "unit",
+		                                    "label": "单位"
+		                                },
+		                                {
+		                                    "type": "input-text",
+		                                    "name": "price",
+		                                    "label": "货品单价"
+		                                },
+		                                {
+		                                    "type": "input-text",
+		                                    "name": "way_in",
+		                                    "label": "入库方式",
+		                                },
+							        ]
+							    },
+							    {
+							        "type": "group",
+							        "body": [
+		                                {
+		                                    "type": "input-text",
+		                                    "name": "location",
+		                                    "label": "存放仓库",
+		                                    "searchable":
+		                                    {
+		                                        "type": "input-text",
+		                                        "name": "location",
+		                                        "label": "存放仓库",
+		                                    }
+		                                },
+		                                {
+		                                    "type": "input-text",
+		                                    "name": "batch_no_produce",
+		                                    "label": "生产批号",
+		                                },
+		                                {
+		                                    "type": "input-date",
+		                                    "name": "produce_date",
+		                                    "label": "生产日期",
+		                                },
+		                                {
+		                                    "type": "input-text",
+		                                    "name": "stock_num",
+		                                    "label": "数量"
+		                                },
+		                            ]
+							    }
+                            ]
+                        }
+                    ]
+                },
+            ]
+        }
+        let amisScoped = amis.embed("#root", amisJSON);
+      })();
+    </script>
+  </body>
+</html>

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -65,7 +64,6 @@ func buildApplicationParams(ctx *gin.Context) sqlite.ListApplicationsParams {
 					Valid:  true,
 				}
 			}
-
 		}
 	}
 
@@ -82,8 +80,6 @@ func buildApplicationParams(ctx *gin.Context) sqlite.ListApplicationsParams {
 			Valid: true,
 		}
 	}
-
-	fmt.Printf("debug: %+v\n", arg)
 
 	return arg
 }

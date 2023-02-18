@@ -18,6 +18,7 @@ func main() {
 	{
 		view.GET("/stock", func(c *gin.Context) { c.HTML(http.StatusOK, "stock.html", nil) })
 		view.GET("/in", func(c *gin.Context) { c.HTML(http.StatusOK, "in.html", nil) })
+		view.GET("/app", func(c *gin.Context) { c.HTML(http.StatusOK, "application.html", nil) })
 	}
 
 	api := router.Group("/api")
@@ -25,16 +26,12 @@ func main() {
 		api.GET("/home", handlers.GetStocks)
 		api.GET("/instock", handlers.GetApplications)
 		api.POST("/put/stock", handlers.PutStock)
+		api.POST("/approvein", handlers.ApproveIN)
 	}
 
 	router.Static("/sdk", "./sdk")
 
-	// start sqlite connection
 	data.SqliteMustInit()
-	// query := sqlite.New(data.Sqlite3)
-	// l, err := query.ListAuthors(ctx)
-	// fmt.Printf("debug: %+v\n", l)
-	// fmt.Printf("debug: %+v\n", err)
 
 	router.Run("0.0.0.0:8888")
 }

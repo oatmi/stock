@@ -70,7 +70,7 @@ const MarkdownTemplate01 = `### 新的入库申请
 > 30g无纺布 x 1
 > 30g无纺布 x 1
 
-前往 [审核地址]() 进行审核。
+前往 [审核地址](http://127.0.0.1:8888/view/stock) 进行审核。
 `
 
 // SendMarkdownMessage 发送一条`markdown`消息

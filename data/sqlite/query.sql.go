@@ -21,8 +21,89 @@ func (q *Queries) CountStocks(ctx context.Context) (int64, error) {
 	return count, err
 }
 
+const createStock = `-- name: CreateStock :exec
+INSERT INTO stocks (
+    name,               product_type, type,         supplier,   model,
+    unit,               price,        batch_no_in,  way_in,     location,
+    batch_no_produce,   produce_date, stock_date,   stock_num,  current_num,
+    value,              status)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+`
+
+type CreateStockParams struct {
+	Name           string `json:"name"`
+	ProductType    int32  `json:"product_type"`
+	Type           int32  `json:"type"`
+	Supplier       string `json:"supplier"`
+	Model          string `json:"model"`
+	Unit           string `json:"unit"`
+	Price          int32  `json:"price"`
+	BatchNoIn      string `json:"batch_no_in"`
+	WayIn          string `json:"way_in"`
+	Location       string `json:"location"`
+	BatchNoProduce string `json:"batch_no_produce"`
+	ProduceDate    string `json:"produce_date"`
+	StockDate      string `json:"stock_date"`
+	StockNum       int32  `json:"stock_num"`
+	CurrentNum     int32  `json:"current_num"`
+	Value          int32  `json:"value"`
+	Status         int32  `json:"status"`
+}
+
+func (q *Queries) CreateStock(ctx context.Context, arg CreateStockParams) error {
+	_, err := q.db.ExecContext(ctx, createStock,
+		arg.Name,
+		arg.ProductType,
+		arg.Type,
+		arg.Supplier,
+		arg.Model,
+		arg.Unit,
+		arg.Price,
+		arg.BatchNoIn,
+		arg.WayIn,
+		arg.Location,
+		arg.BatchNoProduce,
+		arg.ProduceDate,
+		arg.StockDate,
+		arg.StockNum,
+		arg.CurrentNum,
+		arg.Value,
+		arg.Status,
+	)
+	return err
+}
+
+const createStockApplication = `-- name: CreateStockApplication :exec
+INSERT INTO stock_applications(application_date, batch_no_in, status,
+    application_user, approve_date, approve_user, create_date)
+VALUES ($1,$2,$3,$4,$5,$6,$7)
+`
+
+type CreateStockApplicationParams struct {
+	ApplicationDate string `json:"application_date"`
+	BatchNoIn       string `json:"batch_no_in"`
+	Status          int32  `json:"status"`
+	ApplicationUser string `json:"application_user"`
+	ApproveDate     string `json:"approve_date"`
+	ApproveUser     string `json:"approve_user"`
+	CreateDate      string `json:"create_date"`
+}
+
+func (q *Queries) CreateStockApplication(ctx context.Context, arg CreateStockApplicationParams) error {
+	_, err := q.db.ExecContext(ctx, createStockApplication,
+		arg.ApplicationDate,
+		arg.BatchNoIn,
+		arg.Status,
+		arg.ApplicationUser,
+		arg.ApproveDate,
+		arg.ApproveUser,
+		arg.CreateDate,
+	)
+	return err
+}
+
 const listApplications = `-- name: ListApplications :many
-SELECT id, application_date, approve_date, status, application_user, approve_user, create_date
+SELECT id, application_date, batch_no_in, status, application_user, approve_user, approve_date, create_date
 FROM stock_applications
 WHERE
   (application_date >= $1 OR $1 IS NULL) AND
@@ -55,10 +136,11 @@ func (q *Queries) ListApplications(ctx context.Context, arg ListApplicationsPara
 		if err := rows.Scan(
 			&i.ID,
 			&i.ApplicationDate,
-			&i.ApproveDate,
+			&i.BatchNoIn,
 			&i.Status,
 			&i.ApplicationUser,
 			&i.ApproveUser,
+			&i.ApproveDate,
 			&i.CreateDate,
 		); err != nil {
 			return nil, err
@@ -75,20 +157,22 @@ func (q *Queries) ListApplications(ctx context.Context, arg ListApplicationsPara
 }
 
 const listStocks = `-- name: ListStocks :many
-SELECT id, name, product_type, type, supplier, model, unit, price, batch_no_in, way_in, location, batch_no_produce, produce_date, stock_date, stock_num, current_num, value
+SELECT id, name, status, product_type, type, supplier, model, unit, price, batch_no_in, way_in, location, batch_no_produce, produce_date, stock_date, stock_num, current_num, value
 FROM stocks
 WHERE
   (name LIKE $1 OR $1 IS NULL) AND
-  (product_type = $2 OR $2 IS NULL)
+  (product_type = $2 OR $2 IS NULL) AND
+  (status = $3 OR $3 IS NULL)
 `
 
 type ListStocksParams struct {
 	Name        sql.NullString `json:"name"`
 	ProductType sql.NullInt32  `json:"product_type"`
+	Status      sql.NullInt32  `json:"status"`
 }
 
 func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock, error) {
-	rows, err := q.db.QueryContext(ctx, listStocks, arg.Name, arg.ProductType)
+	rows, err := q.db.QueryContext(ctx, listStocks, arg.Name, arg.ProductType, arg.Status)
 	if err != nil {
 		return nil, err
 	}
@@ -99,6 +183,7 @@ func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
+			&i.Status,
 			&i.ProductType,
 			&i.Type,
 			&i.Supplier,
@@ -126,4 +211,37 @@ func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateApplicationIN = `-- name: UpdateApplicationIN :exec
+UPDATE stock_applications
+SET status = $1
+WHERE id = $2
+`
+
+type UpdateApplicationINParams struct {
+	Status int32 `json:"status"`
+	ID     int32 `json:"id"`
+}
+
+func (q *Queries) UpdateApplicationIN(ctx context.Context, arg UpdateApplicationINParams) error {
+	_, err := q.db.ExecContext(ctx, updateApplicationIN, arg.Status, arg.ID)
+	return err
+}
+
+const updateStocks = `-- name: UpdateStocks :exec
+UPDATE stocks
+SET status = $1
+WHERE batch_no_in = $2 and status = $3
+`
+
+type UpdateStocksParams struct {
+	Status    int32  `json:"status"`
+	BatchNoIn string `json:"batch_no_in"`
+	Status_2  int32  `json:"status_2"`
+}
+
+func (q *Queries) UpdateStocks(ctx context.Context, arg UpdateStocksParams) error {
+	_, err := q.db.ExecContext(ctx, updateStocks, arg.Status, arg.BatchNoIn, arg.Status_2)
+	return err
 }
