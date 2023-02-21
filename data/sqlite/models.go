@@ -37,3 +37,12 @@ type StockApplication struct {
 	ApproveDate     string `json:"approve_date"`
 	CreateDate      string `json:"create_date"`
 }
+
+type StockOutApplication struct {
+	ID              int32  `json:"id"`
+	Stockids        string `json:"stockids"`
+	Status          int32  `json:"status"`
+	ApplicationUser string `json:"application_user"`
+	ApproveUser     string `json:"approve_user"`
+	CreateDate      string `json:"create_date"`
+}

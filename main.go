@@ -19,14 +19,20 @@ func main() {
 		view.GET("/stock", func(c *gin.Context) { c.HTML(http.StatusOK, "stock.html", nil) })
 		view.GET("/in", func(c *gin.Context) { c.HTML(http.StatusOK, "in.html", nil) })
 		view.GET("/app", func(c *gin.Context) { c.HTML(http.StatusOK, "application.html", nil) })
+		view.GET("/out", func(c *gin.Context) { c.HTML(http.StatusOK, "out.html", nil) })
+		view.GET("/out_approve", func(c *gin.Context) { c.HTML(http.StatusOK, "out_approve.html", nil) })
+		view.GET("/price", func(c *gin.Context) { c.HTML(http.StatusOK, "price.html", nil) })
 	}
 
 	api := router.Group("/api")
 	{
 		api.GET("/home", handlers.GetStocks)
 		api.GET("/instock", handlers.GetApplications)
+		api.GET("/outstock", handlers.OutStockList)
 		api.POST("/put/stock", handlers.PutStock)
+		api.POST("/out/stock", handlers.OutStockCreate)
 		api.POST("/approvein", handlers.ApproveIN)
+		api.POST("/approveout", handlers.ApproveOut)
 	}
 
 	router.Static("/sdk", "./sdk")

@@ -2,13 +2,13 @@
 <html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>出库管理</title>
+    <title>库存管理</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <link rel="stylesheet" href="./sdk/sdk.css" />
-    <link rel="stylesheet" href="./sdk/helper.css" />
-    <link rel="stylesheet" href="./sdk/iconfont.css" />
+    <link rel="stylesheet" href="/sdk/sdk.css" />
+    <link rel="stylesheet" href="/sdk/helper.css" />
+    <link rel="stylesheet" href="/sdk/iconfont.css" />
     <style>
       html,
       body,
@@ -25,7 +25,7 @@
 
     <div id="root" class="app-wrapper"></div>
     
-    <script src="./sdk/sdk.js"></script>
+    <script src="/sdk/sdk.js"></script>
     <script type="text/javascript">
       (function () {
         let amis = amisRequire("amis/embed");
@@ -51,11 +51,16 @@
                         "icon": "fa fa-right-from-bracket"
                     },
                     {
+                        "label": "出库审核",
+                        "to": "/view/out_approve",
+                        "icon": "fa fa-right-from-bracket"
+                    },
+                    {
                         "label": "定价管理",
                         "to": "/view/price",
                         "icon": "fa fa-tag"
                     }
-                ]
+                ], 
             },
             "body":
             [
@@ -66,286 +71,168 @@
                 },
                 {
                     "type": "crud",
-                    "api": "http://127.0.0.1:8000/sample_in.json",
+                    "api": "/api/home",
                     "syncLocation": false,
                     "autoGenerateFilter": true,
-                    "headerToolbar":
-                    [
-                        {
-                            "label": "出库申请",
-                            "type": "button",
-                            "align": "left",
-                            "actionType": "dialog",
-                            "icon": "fa fa-plus",
-                            "dialog": {
-                                "type": "form",
-                                "size": "full",
-                                "api": "post:/amis/api/mock2/sample",
-                                "body": [
-                                    {
-                                        "type": "combo",
-                                        "name": "combo",
-                                        "strictMode": false,
-                                        "addable": true,
-                                        "multiple": true,
-                                        "label": "版本明细",
-                                        "items":
-                                        [
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "货品名称"
-                                            },
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "货品类型"
-                                            },
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "规格型号"
-                                            },
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "单位"
-                                            },
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "入库批号"
-                                            },
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "生产日期"
-                                            },
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "库存量"
-                                            },
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "进货量"
-                                            },
-                                            {
-                                                "type": "input-text",
-                                                "name": "engine",
-                                                "label": "出货量"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "type": "columns-toggler",
-                            "align": "left",
-                            "draggable": true,
-                            "icon": "fas fa-cog",
-                            "overlay": true,
-                            "footerBtnSize": "sm"
+                    "bulkActions": [
+                      {
+                        "label": "出库",
+                        "actionType": "dialog",
+                        "dialog": {
+                          "title": "确认出库？",
+                          "body": {
+                            "type": "form",
+                            "api": "/api/out/stock",
+                            "body": [
+                              {
+                                "type": "hidden",
+                                "name": "ids"
+                              },
+                              // {
+                              //   "type": "input-text",
+                              //   "name": "engine",
+                              //   "label": "Engine"
+                              // }
+                            ]
+                          }
                         }
+                      }
                     ],
+                    "headerToolbar": [ "bulkActions"],
                     "columns":
                     [
                         {
-                            "name": "id",
-                            "label": "编号",
-                        },
-                        {
-                            "name": "date",
-                            "label": "申请时间",
+                            "name": "name",
+                            "label": "货品名称",
                             "searchable":
                             {
-                                "type": "input-datetime-range",
-                                "name": "date",
-                                "label": "申请时间",
+                                "type": "input-text",
+                                "name": "name",
+                                "label": "货品名称",
                             }
                         },
                         {
-                            "name": "user_name",
-                            "label": "申请人",
-                            "searchable":
-                            {
-                                "type": "select",
-                                "name": "user_name",
-                                "label": "主键",
-                                "label": "申请人",
-                                "options":
-                                [
-                                    {
-                                        "label": "Internet Explorer ",
-                                        "value": "ie"
-                                    },
-                                    {
-                                        "label": "AOL browser",
-                                        "value": "aol"
-                                    },
-                                    {
-                                        "label": "Firefox",
-                                        "value": "firefox"
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "name": "approve_date",
-                            "label": "审核时间"
-                        },
-                        {
-                            "name": "approve_user",
-                            "label": "审核人"
-                        },
-                        {
-                            "name": "status",
-                            "label": "状态",
+                            "name": "product_type",
+                            "label": "成品类型",
                             "type": "mapping",
                             "map": {
-                                "*": {
-                                    "type": "status",
-                                    "labelMap": {
-                                        "schedule": "待审核",
-                                        "fail": "审核拒绝",
-                                        "success": "审核通过",
-                                    }
-                                },
+                                "1": "<span class='label label-info'>原材料</span>",
+                                "2": "<span class='label label-success'>成品</span>",
+                                "*": "<span class='label label-warning'>其他</span>",
                             },
                             "searchable":
                             {
                                 "type": "select",
-                                "name": "status",
-                                "label": "状态",
+                                "name": "product_type",
+                                "label": "成品类型",
                                 "options":
                                 [
-                                    {
-                                        "label": "Internet Explorer ",
-                                        "value": "ie"
-                                    },
-                                    {
-                                        "label": "AOL browser",
-                                        "value": "aol"
-                                    },
-                                    {
-                                        "label": "Firefox",
-                                        "value": "firefox"
-                                    }
+                                    { "label": "原材料", "value": "1" },
+                                    { "label": "成品", "value": "2" },
                                 ]
                             }
                         },
                         {
-                            "type": "operation",
-                            "label": "操作",
-                            "buttons": [
-                                {
-                                    "label": "修改",
-                                    "type": "button",
-                                    "actionType": "dialog",
-                                    "icon": "fa-regular fa-pen-to-square",
-                                    "dialog": {
-                                        "title": "修改申请单",
-                                        "size": "full",
-                                        "body": {
-                                            "type": "form",
-                                            "initApi": "http://127.0.0.1:8000/one_stock.json",
-                                            "api": "post:/amis/api/mock2/sample/${id}",
-                                            "body": [
-                                                {
-                                                    "type": "combo",
-                                                    "name": "combo",
-                                                    "strictMode": false,
-                                                    "addable": true,
-                                                    "multiple": true,
-                                                    "label": "版本明细",
-                                                    "items":
-                                                    [
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "货品名称"
-                                                        },
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "货品类型"
-                                                        },
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "规格型号"
-                                                        },
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "单位"
-                                                        },
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "入库批号"
-                                                        },
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "生产日期"
-                                                        },
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "库存量"
-                                                        },
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "进货量"
-                                                        },
-                                                        {
-                                                            "type": "input-text",
-                                                            "name": "engine",
-                                                            "label": "出货量"
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    }
-                                },
-                                {
-                                    "label": "审核",
-                                    "type": "button",
-                                    "actionType": "dialog",
-                                    "icon": "fa-solid fa-person-circle-check",
-                                    "dialog": {
-                                        "title": "审核结论",
-                                        "body":
-                                        {
-                                            "type": "form",
-                                            "api": "/amis/api/mock2/form/saveForm?waitSeconds=2",
-                                            "body":
-                                            [
-                                                {
-                                                    "type": "switch",
-                                                    "name": "status",
-                                                    "inputClassName": "is-inline",
-                                                    "label": "审核结论",
-                                                    "onText": "通过",
-                                                    "offText": "不通过"
-                                                },
-                                                {
-                                                    "type": "input-text",
-                                                    "name": "comment",
-                                                    "label": "备注",
-                                                    "placeholder": "请输入备注"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            ]
-                        }
+                            "name": "type",
+                            "label": "货品类型",
+                            "type": "mapping",
+                            "map": {
+                                "1": "其他",
+                                "2": "面料",
+                                "3": "双面胶",
+                                "4": "标签",
+                                "5": "胶条",
+                                "6": "包材",
+                                "7": "纸箱",
+                                "8": "口罩",
+                                "9": "采样器",
+                                "10": "线",
+                            },
+                            "searchable":
+                            {
+                                "type": "select",
+                                "name": "type",
+                                "label": "货品类型",
+                                "options":
+                                [
+                                    { "label": "其他", "value": "1" },
+                                    { "label": "面料", "value": "2" },
+                                    { "label": "双面胶", "value": "3" },
+                                    { "label": "标签", "value": "4" },
+                                    { "label": "胶条", "value": "5" },
+                                    { "label": "包材", "value": "6" },
+                                    { "label": "纸箱", "value": "7" },
+                                    { "label": "口罩", "value": "8" },
+                                    { "label": "采样器", "value": "9" },
+                                    { "label": "线", "value": "10" },
+                                ]
+                            }
+                        },
+                        {
+                            "name": "supplier",
+                            "label": "供应商"
+                        },
+                        {
+                            "name": "model",
+                            "label": "规格型号"
+                        },
+                        {
+                            "name": "unit",
+                            "label": "单位"
+                        },
+                        {
+                            "name": "price",
+                            "label": "货品单价"
+                        },
+                        {
+                            "name": "batch_no_in",
+                            "label": "入库批号",
+                        },
+                        {
+                            "name": "way_in",
+                            "label": "入库方式",
+                        },
+                        {
+                            "name": "location",
+                            "label": "存放仓库",
+                            "searchable":
+                            {
+                                "type": "input-text",
+                                "name": "location",
+                                "label": "存放仓库",
+                            }
+                        },
+                        {
+                            "name": "batch_no_produce",
+                            "label": "生产批号",
+                        },
+                        {
+                            "name": "produce_date",
+                            "label": "生产日期",
+                            "searchable":
+                            {
+                                "type": "input-date",
+                                "name": "produce_date",
+                                "label": "生产日期",
+                                "format": "YYYY-MM-DD"
+                            }
+                        },
+                        {
+                            "name": "stock_date",
+                            "label": "入库时间"
+                        },
+                        {
+                            "name": "stock_num",
+                            "label": "入库数量"
+                        },
+                        {
+                            "name": "current_num",
+                            "label": "当前数量"
+                        },
+                        {
+                            "name": "value",
+                            "label": "当前价值"
+                        },
                     ],
                 }
             ]

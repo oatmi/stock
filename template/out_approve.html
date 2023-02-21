@@ -71,19 +71,11 @@
                 },
                 {
                     "type": "crud",
-                    "api": "/api/instock",
+                    "api": "/api/outstock",
                     "syncLocation": false,
                     "autoGenerateFilter": true,
                     "headerToolbar":
                     [
-                        {
-                            "label": "入库申请",
-                            "type": "button",
-                            "align": "left",
-                            "actionType": "link",
-                            "link": "/view/app",
-                            "icon": "",
-                        },
                         {
                             "type": "columns-toggler",
                             "align": "left",
@@ -99,20 +91,16 @@
                             "name": "id",
                             "label": "编号",
                         },
-                        {
-                            "name": "batch_no_in",
-                            "label": "入库批号",
-                        },
-                        {
-                            "name": "application_date",
-                            "label": "申请时间",
-                            "searchable":
-                            {
-                                "type": "input-datetime-range",
-                                "name": "application_date",
-                                "label": "申请时间",
-                            }
-                        },
+                        // {
+                        //     "name": "create_date",
+                        //     "label": "申请时间",
+                        //     "searchable":
+                        //     {
+                        //         "type": "input-datetime-range",
+                        //         "name": "create_date",
+                        //         "label": "申请时间",
+                        //     }
+                        // },
                         {
                             "name": "application_user",
                             "label": "申请人",
@@ -123,13 +111,15 @@
                                 "label": "申请人",
                             }
                         },
-                        // {
-                        //     "name": "approve_date",
-                        //     "label": "审核时间"
-                        // },
                         {
                             "name": "approve_user",
-                            "label": "审核人"
+                            "label": "审核人",
+                            "searchable":
+                            {
+                                "type": "input-text",
+                                "name": "approve_user",
+                                "label": "申请人",
+                            }
                         },
                         {
                             "name": "status",
@@ -182,7 +172,7 @@
                                         "body":
                                         {
                                             "type": "form",
-                                            "api": "post:/api/approvein",
+                                            "api": "post:/api/approveout",
                                             "body":
                                             [
                                                 {
@@ -201,7 +191,7 @@
                                                 },
                                                 {
                                                     "type": "hidden",
-                                                    "name": "batch_no_in",
+                                                    "name": "stockids",
                                                 },
                                             ]
                                         }

@@ -77,29 +77,6 @@
                     "headerToolbar":
                     [
                         {
-                            "label": "新增",
-                            "type": "button",
-                            "align": "left",
-                            "actionType": "dialog",
-                            "icon": "fa fa-plus",
-                            "dialog": {
-                                "type": "form",
-                                "api": "post:/api/put/stock",
-                                "body": [
-                                    {
-                                        "type": "input-text",
-                                        "name": "engine",
-                                        "label": "Engine"
-                                    },
-                                    {
-                                        "type": "input-text",
-                                        "name": "browser",
-                                        "label": "Browser"
-                                    }
-                                ]
-                            }
-                        },
-                        {
                             "type": "columns-toggler",
                             "align": "left",
                             "draggable": true,
@@ -242,6 +219,38 @@
                             "name": "value",
                             "label": "当前价值"
                         },
+                        {
+                            "type": "operation",
+                            "label": "操作",
+                            "buttons": [
+                                {
+                                    "label": "修改定价",
+                                    // "hiddenOn": "status==3 || status==4",
+                                    "type": "button",
+                                    "actionType": "dialog",
+                                    "icon": "fa-solid fa-person-circle-check",
+                                    "dialog": {
+                                        "title": "审核结论",
+                                        "body":
+                                        {
+                                            "type": "form",
+                                            "api": "post:/api/approveout",
+                                            "body":
+                                            [
+                                                {
+                                                    "type": "hidden",
+                                                    "name": "id",
+                                                },
+                                                {
+                                                    "type": "input-number",
+                                                    "name": "price",
+                                                },
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
                     ],
                 }
             ]

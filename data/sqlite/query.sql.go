@@ -21,6 +21,31 @@ func (q *Queries) CountStocks(ctx context.Context) (int64, error) {
 	return count, err
 }
 
+const createOutApplication = `-- name: CreateOutApplication :exec
+INSERT INTO stock_out_applications (
+    stockids, status, application_user, approve_user, create_date)
+VALUES ($1,$2,$3,$4,$5)
+`
+
+type CreateOutApplicationParams struct {
+	Stockids        string `json:"stockids"`
+	Status          int32  `json:"status"`
+	ApplicationUser string `json:"application_user"`
+	ApproveUser     string `json:"approve_user"`
+	CreateDate      string `json:"create_date"`
+}
+
+func (q *Queries) CreateOutApplication(ctx context.Context, arg CreateOutApplicationParams) error {
+	_, err := q.db.ExecContext(ctx, createOutApplication,
+		arg.Stockids,
+		arg.Status,
+		arg.ApplicationUser,
+		arg.ApproveUser,
+		arg.CreateDate,
+	)
+	return err
+}
+
 const createStock = `-- name: CreateStock :exec
 INSERT INTO stocks (
     name,               product_type, type,         supplier,   model,
@@ -156,6 +181,51 @@ func (q *Queries) ListApplications(ctx context.Context, arg ListApplicationsPara
 	return items, nil
 }
 
+const listOutApplications = `-- name: ListOutApplications :many
+SELECT id, stockids, status, application_user, approve_user, create_date
+FROM stock_out_applications
+WHERE
+  (application_user >= $1 OR $1 IS NULL) AND
+  (approve_user <= $2 OR $2 IS NULL) AND
+  (status = $3 OR $3 IS NULL)
+`
+
+type ListOutApplicationsParams struct {
+	ApplicationUser sql.NullString `json:"application_user"`
+	ApproveUser     sql.NullString `json:"approve_user"`
+	Status          sql.NullInt32  `json:"status"`
+}
+
+func (q *Queries) ListOutApplications(ctx context.Context, arg ListOutApplicationsParams) ([]StockOutApplication, error) {
+	rows, err := q.db.QueryContext(ctx, listOutApplications, arg.ApplicationUser, arg.ApproveUser, arg.Status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []StockOutApplication
+	for rows.Next() {
+		var i StockOutApplication
+		if err := rows.Scan(
+			&i.ID,
+			&i.Stockids,
+			&i.Status,
+			&i.ApplicationUser,
+			&i.ApproveUser,
+			&i.CreateDate,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listStocks = `-- name: ListStocks :many
 SELECT id, name, status, product_type, type, supplier, model, unit, price, batch_no_in, way_in, location, batch_no_produce, produce_date, stock_date, stock_num, current_num, value
 FROM stocks
@@ -226,6 +296,38 @@ type UpdateApplicationINParams struct {
 
 func (q *Queries) UpdateApplicationIN(ctx context.Context, arg UpdateApplicationINParams) error {
 	_, err := q.db.ExecContext(ctx, updateApplicationIN, arg.Status, arg.ID)
+	return err
+}
+
+const updateApplicationOUT = `-- name: UpdateApplicationOUT :exec
+UPDATE stock_out_applications
+SET status = $1
+WHERE id = $2
+`
+
+type UpdateApplicationOUTParams struct {
+	Status int32 `json:"status"`
+	ID     int32 `json:"id"`
+}
+
+func (q *Queries) UpdateApplicationOUT(ctx context.Context, arg UpdateApplicationOUTParams) error {
+	_, err := q.db.ExecContext(ctx, updateApplicationOUT, arg.Status, arg.ID)
+	return err
+}
+
+const updateStockStatusByID = `-- name: UpdateStockStatusByID :exec
+UPDATE stocks
+SET status = $1
+WHERE id = $2
+`
+
+type UpdateStockStatusByIDParams struct {
+	Status int32 `json:"status"`
+	ID     int32 `json:"id"`
+}
+
+func (q *Queries) UpdateStockStatusByID(ctx context.Context, arg UpdateStockStatusByIDParams) error {
+	_, err := q.db.ExecContext(ctx, updateStockStatusByID, arg.Status, arg.ID)
 	return err
 }
 

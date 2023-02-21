@@ -19,6 +19,11 @@ UPDATE stocks
 SET status = $1
 WHERE batch_no_in = $2 and status = $3;
 
+-- name: UpdateStockStatusByID :exec
+UPDATE stocks
+SET status = $1
+WHERE id = $2;
+
 -- name: CountStocks :one
 SELECT count(*) FROM stocks;
 
@@ -41,4 +46,21 @@ UPDATE stock_applications
 SET status = $1
 WHERE id = $2;
 
+-- name: CreateOutApplication :exec
+INSERT INTO stock_out_applications (
+    stockids, status, application_user, approve_user, create_date)
+VALUES ($1,$2,$3,$4,$5);
 
+
+-- name: ListOutApplications :many
+SELECT *
+FROM stock_out_applications
+WHERE
+  (application_user >= sqlc.narg('application_user') OR sqlc.narg('application_user') IS NULL) AND
+  (approve_user <= sqlc.narg('approve_user') OR sqlc.narg('approve_user') IS NULL) AND
+  (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL);
+
+-- name: UpdateApplicationOUT :exec
+UPDATE stock_out_applications
+SET status = $1
+WHERE id = $2;
