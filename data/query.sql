@@ -24,6 +24,11 @@ UPDATE stocks
 SET status = $1
 WHERE id = $2;
 
+-- name: UpdateStockPriceByID :exec
+UPDATE stocks
+SET price = $1
+WHERE id = $2;
+
 -- name: CountStocks :one
 SELECT count(*) FROM stocks;
 

@@ -29,10 +29,12 @@ func main() {
 		api.GET("/home", handlers.GetStocks)
 		api.GET("/instock", handlers.GetApplications)
 		api.GET("/outstock", handlers.OutStockList)
+
 		api.POST("/put/stock", handlers.PutStock)
 		api.POST("/out/stock", handlers.OutStockCreate)
 		api.POST("/approvein", handlers.ApproveIN)
 		api.POST("/approveout", handlers.ApproveOut)
+		api.POST("/alterprice", handlers.AlterPrice)
 	}
 
 	router.Static("/sdk", "./sdk")
