@@ -5,4 +5,9 @@ RUN apt-get update \
 
 COPY . ./src/github.com/oatmi/stock
 
-RUN cd ./src/github.com/oatmi/stock && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=x86_64-linux-gnu-gcc go build main.go
+WORKDIR ./src/github.com/oatmi/stock
+
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=x86_64-linux-gnu-gcc go build main.go
+
+EXPOSE 8888
+ENTRYPOINT ["./main"]
