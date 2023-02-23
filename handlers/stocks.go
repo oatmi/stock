@@ -28,6 +28,7 @@ func GetStocks(c *gin.Context) {
 
 	list, err := query.ListStocks(c, buildListStockParams(c))
 	if err != nil {
+		fmt.Printf("debug: %+v\n", err)
 		c.JSON(http.StatusOK, AisudaiResponse{Message: "无数据"})
 		return
 	}

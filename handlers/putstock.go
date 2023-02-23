@@ -52,7 +52,7 @@ func PutStock(c *gin.Context) {
 	}
 	err = query.CreateStockApplication(c, application)
 	if err != nil {
-		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 提交申请失败"})
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 提交申请失败" + err.Error()})
 		return
 	}
 
