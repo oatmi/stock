@@ -67,10 +67,10 @@ type CreateStockParams struct {
 	WayIn            int32  `json:"way_in"`
 	Location         int32  `json:"location"`
 	BatchNoProduce   string `json:"batch_no_produce"`
-	ProduceDate      string `json:"produce_date"`
+	ProduceDate      int32  `json:"produce_date"`
 	DisinfectionNo   string `json:"disinfection_no"`
-	DisinfectionDate string `json:"disinfection_date"`
-	StockDate        string `json:"stock_date"`
+	DisinfectionDate int32  `json:"disinfection_date"`
+	StockDate        int32  `json:"stock_date"`
 	StockNum         int32  `json:"stock_num"`
 	CurrentNum       int32  `json:"current_num"`
 	Value            int32  `json:"value"`

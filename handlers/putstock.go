@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
@@ -19,18 +20,20 @@ type PutStockRequest struct {
 }
 
 type Stock struct {
-	Name           string `json:"name"`
-	ProductType    string `json:"product_type"`
-	Type           string `json:"type"`
-	Supplier       string `json:"supplier"`
-	Model          string `json:"model"`
-	Unit           string `json:"unit"`
-	Price          string `json:"price"`
-	WayIn          string `json:"way_in"`
-	Location       string `json:"location"`
-	BatchNoProduce string `json:"batch_no_produce"`
-	ProduceDate    string `json:"produce_date"`
-	StockNum       string `json:"stock_num"`
+	Name             string `json:"name"`
+	ProductType      string `json:"product_type"`
+	ProductAttr      string `json:"product_attr"`
+	Supplier         string `json:"supplier"`
+	Model            string `json:"model"`
+	Unit             string `json:"unit"`
+	Price            int    `json:"price"`
+	WayIn            string `json:"way_in"`
+	Location         string `json:"location"`
+	BatchNoProduce   string `json:"batch_no_produce"`
+	ProduceDate      string `json:"produce_date"`
+	DisinfectionNo   string `json:"disinfection_no"`
+	DisinfectionDate string `json:"disinfection_date"`
+	StockNum         int    `json:"stock_num"`
 }
 
 func PutStock(c *gin.Context) {
@@ -60,18 +63,25 @@ func PutStock(c *gin.Context) {
 
 	for _, s := range stocks.Stock {
 		createParam := sqlite.CreateStockParams{
-			Name:           s.Name,
-			ProductType:    cast.ToInt32(s.ProductType),
-			Supplier:       s.Supplier,
-			Model:          s.Model,
-			Unit:           s.Unit,
-			Price:          cast.ToInt32(s.Price),
-			BatchNoIn:      stocks.BatchNoIn,
-			BatchNoProduce: s.BatchNoProduce,
-			ProduceDate:    s.ProduceDate, // TODO 转成日期
-			StockDate:      lib.CurrentDate(),
-			StockNum:       cast.ToInt32(s.StockNum),
-			Status:         2, // 1: ok, 2: waitIN, 3: outed
+			Status:           2, // 1: ok, 2: waitIN, 3: outed
+			Name:             s.Name,
+			ProductType:      cast.ToInt32(s.ProductType),
+			ProductAttr:      cast.ToInt32(s.ProductAttr),
+			Supplier:         s.Supplier,
+			Model:            s.Model,
+			Unit:             s.Unit,
+			Price:            cast.ToInt32(s.Price),
+			BatchNoIn:        stocks.BatchNoIn,
+			WayIn:            cast.ToInt32(s.WayIn),
+			Location:         cast.ToInt32(s.Location),
+			BatchNoProduce:   s.BatchNoProduce,
+			ProduceDate:      cast.ToInt32(s.ProduceDate),
+			DisinfectionNo:   s.DisinfectionNo,
+			DisinfectionDate: cast.ToInt32(s.DisinfectionDate),
+			StockDate:        int32(time.Now().Unix()),
+			StockNum:         cast.ToInt32(s.StockNum),
+			CurrentNum:       cast.ToInt32(s.StockNum),
+			Value:            cast.ToInt32(s.StockNum) * cast.ToInt32(s.Price),
 		}
 		err := query.CreateStock(c, createParam)
 		if err == nil {

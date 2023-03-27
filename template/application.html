@@ -104,35 +104,32 @@
 		                                },
 							        	{
 		                                    "name": "product_type",
-		                                    "label": "成品类型",
-		                                    "type": "select",
-		                                    "required": true,
-		                                    "options": {
-		                                        "1": "原材料",
-		                                        "2": "成品",
-		                                    },
-		                                },
-		                                {
-		                                    "name": "type",
 		                                    "label": "货品类型",
 		                                    "type": "select",
 		                                    "required": true,
 		                                    "options": {
-		                                        "1": "其他",
-		                                        "2": "面料",
-		                                        "3": "双面胶",
-		                                        "4": "标签",
-		                                        "5": "胶条",
-		                                        "6": "包材",
-		                                        "7": "纸箱",
-		                                        "8": "口罩",
-		                                        "9": "采样器",
-		                                        "10": "线",
+		                                        "1": "主材",
+                                				"2": "辅材",
+                                				"3": "本成品",
+                                				"4": "成品",
 		                                    },
 		                                },
 		                                {
+		                                    "name": "product_attr",
+		                                    "label": "货品属性",
+		                                    "type": "select",
+		                                    "required": true,
+		                                    "options": {
+		                                        "1": "医疗器械",
+                                				"2": "非医疗器械",
+                                				"3": "健康产品",
+		                                    },
+		                                },
+		                               
+		                                {
 	                                    	"type": "input-text",
 		                                    "name": "supplier",
+		                                    "required": true,
 		                                    "label": "供应商"
 		                                },
 							        ]
@@ -143,22 +140,32 @@
 							        	{
 		                                    "type": "input-text",
 		                                    "name": "model",
+		                                    "required": true,
 		                                    "label": "规格型号"
 		                                },
 		                                {
 		                                    "type": "input-text",
 		                                    "name": "unit",
+		                                    "required": true,
 		                                    "label": "单位"
 		                                },
 		                                {
-		                                    "type": "input-text",
+		                                    "type": "input-number",
 		                                    "name": "price",
-		                                    "label": "货品单价"
+		                                    "required": true,
+		                                    "label": "货品单价(分)"
 		                                },
 		                                {
-		                                    "type": "input-text",
+		                                    "type": "select",
 		                                    "name": "way_in",
 		                                    "label": "入库方式",
+		                                    "required": true,
+		                                    "options": {
+		                                        "1": "客供",
+                                				"2": "内供",
+                                				"3": "外发",
+                                				"4": "外购",
+		                                    },
 		                                },
 							        ]
 							    },
@@ -166,32 +173,61 @@
 							        "type": "group",
 							        "body": [
 		                                {
-		                                    "type": "input-text",
+		                                    "type": "select",
 		                                    "name": "location",
 		                                    "label": "存放仓库",
-		                                    "searchable":
-		                                    {
-		                                        "type": "input-text",
-		                                        "name": "location",
-		                                        "label": "存放仓库",
-		                                    }
+		                                    "required": true,
+		                                    "options": {
+		                                        "5301": "5301",
+				                                "5302": "5302",
+				                                "5402": "5402",
+				                                "5403": "5403",
+				                                "5404": "5404",
+				                                "5405": "5405",
+				                                "5406": "5406",
+				                                "5407": "5407",
+				                                "5408": "5408",
+				                                "5409": "5409",
+				                                "5410": "5410",
+				                                "5411": "5411",
+		                                    },
 		                                },
 		                                {
 		                                    "type": "input-text",
 		                                    "name": "batch_no_produce",
+		                                    "required": true,
 		                                    "label": "生产批号",
 		                                },
 		                                {
 		                                    "type": "input-date",
 		                                    "name": "produce_date",
+		                                    "required": true,
 		                                    "label": "生产日期",
 		                                },
 		                                {
 		                                    "type": "input-text",
-		                                    "name": "stock_num",
-		                                    "label": "数量"
+		                                    "name": "disinfection_no",
+		                                    "required": true,
+		                                    "label": "灭菌批号",
 		                                },
 		                            ]
+							    },
+							    {
+							        "type": "group",
+							        "body": [
+							        	{
+		                                    "type": "input-date",
+		                                    "name": "disinfection_date",
+		                                    "required": true,
+		                                    "label": "灭菌日期",
+		                                },
+		                                {
+		                                    "type": "input-number",
+		                                    "name": "stock_num",
+		                                    "required": true,
+		                                    "label": "入库数量",
+		                                },
+							        ]
 							    }
                             ]
                         }
