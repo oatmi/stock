@@ -7,12 +7,11 @@ WHERE
   (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL);
 
 -- name: CreateStock :exec
-INSERT INTO stocks (
-    name,               product_type, type,         supplier,   model,
-    unit,               price,        batch_no_in,  way_in,     location,
-    batch_no_produce,   produce_date, stock_date,   stock_num,  current_num,
-    value,              status)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17);
+INSERT INTO stocks (status, name, product_type, product_attr,
+    supplier, model, unit, price, batch_no_in, way_in, location,
+    batch_no_produce, produce_date, disinfection_no, disinfection_date,
+    stock_date, stock_num, current_num, value)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19);
 
 -- name: UpdateStocks :exec
 UPDATE stocks

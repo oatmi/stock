@@ -47,39 +47,41 @@ func (q *Queries) CreateOutApplication(ctx context.Context, arg CreateOutApplica
 }
 
 const createStock = `-- name: CreateStock :exec
-INSERT INTO stocks (
-    name,               product_type, type,         supplier,   model,
-    unit,               price,        batch_no_in,  way_in,     location,
-    batch_no_produce,   produce_date, stock_date,   stock_num,  current_num,
-    value,              status)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+INSERT INTO stocks (status, name, product_type, product_attr,
+    supplier, model, unit, price, batch_no_in, way_in, location,
+    batch_no_produce, produce_date, disinfection_no, disinfection_date,
+    stock_date, stock_num, current_num, value)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
 `
 
 type CreateStockParams struct {
-	Name           string `json:"name"`
-	ProductType    int32  `json:"product_type"`
-	Type           int32  `json:"type"`
-	Supplier       string `json:"supplier"`
-	Model          string `json:"model"`
-	Unit           string `json:"unit"`
-	Price          int32  `json:"price"`
-	BatchNoIn      string `json:"batch_no_in"`
-	WayIn          string `json:"way_in"`
-	Location       string `json:"location"`
-	BatchNoProduce string `json:"batch_no_produce"`
-	ProduceDate    string `json:"produce_date"`
-	StockDate      string `json:"stock_date"`
-	StockNum       int32  `json:"stock_num"`
-	CurrentNum     int32  `json:"current_num"`
-	Value          int32  `json:"value"`
-	Status         int32  `json:"status"`
+	Status           int32  `json:"status"`
+	Name             string `json:"name"`
+	ProductType      int32  `json:"product_type"`
+	ProductAttr      int32  `json:"product_attr"`
+	Supplier         string `json:"supplier"`
+	Model            string `json:"model"`
+	Unit             string `json:"unit"`
+	Price            int32  `json:"price"`
+	BatchNoIn        string `json:"batch_no_in"`
+	WayIn            int32  `json:"way_in"`
+	Location         int32  `json:"location"`
+	BatchNoProduce   string `json:"batch_no_produce"`
+	ProduceDate      string `json:"produce_date"`
+	DisinfectionNo   string `json:"disinfection_no"`
+	DisinfectionDate string `json:"disinfection_date"`
+	StockDate        string `json:"stock_date"`
+	StockNum         int32  `json:"stock_num"`
+	CurrentNum       int32  `json:"current_num"`
+	Value            int32  `json:"value"`
 }
 
 func (q *Queries) CreateStock(ctx context.Context, arg CreateStockParams) error {
 	_, err := q.db.ExecContext(ctx, createStock,
+		arg.Status,
 		arg.Name,
 		arg.ProductType,
-		arg.Type,
+		arg.ProductAttr,
 		arg.Supplier,
 		arg.Model,
 		arg.Unit,
@@ -89,11 +91,12 @@ func (q *Queries) CreateStock(ctx context.Context, arg CreateStockParams) error 
 		arg.Location,
 		arg.BatchNoProduce,
 		arg.ProduceDate,
+		arg.DisinfectionNo,
+		arg.DisinfectionDate,
 		arg.StockDate,
 		arg.StockNum,
 		arg.CurrentNum,
 		arg.Value,
-		arg.Status,
 	)
 	return err
 }
@@ -227,7 +230,7 @@ func (q *Queries) ListOutApplications(ctx context.Context, arg ListOutApplicatio
 }
 
 const listStocks = `-- name: ListStocks :many
-SELECT id, name, status, product_type, type, supplier, model, unit, price, batch_no_in, way_in, location, batch_no_produce, produce_date, stock_date, stock_num, current_num, value
+SELECT id, status, name, product_type, product_attr, supplier, model, unit, price, batch_no_in, way_in, location, batch_no_produce, produce_date, disinfection_no, disinfection_date, stock_date, stock_num, current_num, value
 FROM stocks
 WHERE
   (name LIKE $1 OR $1 IS NULL) AND
@@ -252,10 +255,10 @@ func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock
 		var i Stock
 		if err := rows.Scan(
 			&i.ID,
-			&i.Name,
 			&i.Status,
+			&i.Name,
 			&i.ProductType,
-			&i.Type,
+			&i.ProductAttr,
 			&i.Supplier,
 			&i.Model,
 			&i.Unit,
@@ -265,6 +268,8 @@ func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock
 			&i.Location,
 			&i.BatchNoProduce,
 			&i.ProduceDate,
+			&i.DisinfectionNo,
+			&i.DisinfectionDate,
 			&i.StockDate,
 			&i.StockNum,
 			&i.CurrentNum,

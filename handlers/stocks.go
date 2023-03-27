@@ -1,14 +1,11 @@
 package handlers
 
 import (
-	"database/sql"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
-	"github.com/spf13/cast"
 )
 
 type AisudaiResponse struct {
@@ -19,7 +16,7 @@ type AisudaiResponse struct {
 
 type AisudaiCRUDData struct {
 	Count int         `json:"count"`
-	Rows  interface{} `json:"raws"`
+	Rows  interface{} `json:"rows"`
 }
 
 // GetStocks 获取库存数据
@@ -28,8 +25,7 @@ func GetStocks(c *gin.Context) {
 
 	list, err := query.ListStocks(c, buildListStockParams(c))
 	if err != nil {
-		fmt.Printf("debug: %+v\n", err)
-		c.JSON(http.StatusOK, AisudaiResponse{Message: "无数据"})
+		c.JSON(http.StatusOK, AisudaiResponse{Message: "无数据 " + err.Error()})
 		return
 	}
 
@@ -45,12 +41,12 @@ func GetStocks(c *gin.Context) {
 
 func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 	arg := sqlite.ListStocksParams{}
-	if val, ok := c.GetQuery("Name"); ok && val != "" {
-		arg.Name = sql.NullString{
-			String: "%" + val + "%",
-			Valid:  true,
-		}
-	}
+	// if val, ok := c.GetQuery("Name"); ok && val != "" {
+	// 	arg.Name = sql.NullString{
+	// 		String: "%" + val + "%",
+	// 		Valid:  true,
+	// 	}
+	// }
 	// if val, ok := c.GetQuery("ProductType"); ok {
 	// 	arg.ProductType = cast.ToInt64(val)
 	// }
@@ -64,17 +60,17 @@ func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 	// 	arg.Location = val
 	// }
 
-	if val, ok := c.GetQuery("status"); ok && val != "" {
-		arg.Status = sql.NullInt32{
-			Int32: cast.ToInt32(val),
-			Valid: true,
-		}
-	} else {
-		arg.Status = sql.NullInt32{
-			Int32: 1,
-			Valid: true,
-		}
-	}
-	fmt.Printf("debug: %+v\n", arg)
+	//if val, ok := c.GetQuery("status"); ok && val != "" {
+	//	arg.Status = sql.NullInt32{
+	//		Int32: cast.ToInt32(val),
+	//		Valid: true,
+	//	}
+	//} else {
+	//	arg.Status = sql.NullInt32{
+	//		Int32: 1,
+	//		Valid: true,
+	//	}
+	//}
+	//fmt.Printf("debug: %+v\n", arg)
 	return arg
 }

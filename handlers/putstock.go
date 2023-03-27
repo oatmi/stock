@@ -62,14 +62,11 @@ func PutStock(c *gin.Context) {
 		createParam := sqlite.CreateStockParams{
 			Name:           s.Name,
 			ProductType:    cast.ToInt32(s.ProductType),
-			Type:           cast.ToInt32(s.Type),
 			Supplier:       s.Supplier,
 			Model:          s.Model,
 			Unit:           s.Unit,
 			Price:          cast.ToInt32(s.Price),
 			BatchNoIn:      stocks.BatchNoIn,
-			WayIn:          s.WayIn,
-			Location:       s.Location,
 			BatchNoProduce: s.BatchNoProduce,
 			ProduceDate:    s.ProduceDate, // TODO 转成日期
 			StockDate:      lib.CurrentDate(),

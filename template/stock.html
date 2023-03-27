@@ -99,60 +99,24 @@
                         },
                         {
                             "name": "product_type",
-                            "label": "成品类型",
-                            "type": "mapping",
-                            "map": {
-                                "1": "<span class='label label-info'>原材料</span>",
-                                "2": "<span class='label label-success'>成品</span>",
-                                "*": "<span class='label label-warning'>其他</span>",
-                            },
-                            "searchable":
-                            {
-                                "type": "select",
-                                "name": "product_type",
-                                "label": "成品类型",
-                                "options":
-                                [
-                                    { "label": "原材料", "value": "1" },
-                                    { "label": "成品", "value": "2" },
-                                ]
-                            }
-                        },
-                        {
-                            "name": "type",
                             "label": "货品类型",
                             "type": "mapping",
                             "map": {
-                                "1": "其他",
-                                "2": "面料",
-                                "3": "双面胶",
-                                "4": "标签",
-                                "5": "胶条",
-                                "6": "包材",
-                                "7": "纸箱",
-                                "8": "口罩",
-                                "9": "采样器",
-                                "10": "线",
+                                "1": "<span class='label label-info'>主材</span>",
+                                "2": "<span class='label label-info'>辅材</span>",
+                                "3": "<span class='label label-info'>本成品</span>",
+                                "4": "<span class='label label-info'>成品</span>",
                             },
-                            "searchable":
-                            {
-                                "type": "select",
-                                "name": "type",
-                                "label": "货品类型",
-                                "options":
-                                [
-                                    { "label": "其他", "value": "1" },
-                                    { "label": "面料", "value": "2" },
-                                    { "label": "双面胶", "value": "3" },
-                                    { "label": "标签", "value": "4" },
-                                    { "label": "胶条", "value": "5" },
-                                    { "label": "包材", "value": "6" },
-                                    { "label": "纸箱", "value": "7" },
-                                    { "label": "口罩", "value": "8" },
-                                    { "label": "采样器", "value": "9" },
-                                    { "label": "线", "value": "10" },
-                                ]
-                            }
+                        },
+                        {
+                            "name": "product_attr",
+                            "label": "货品属性",
+                            "type": "mapping",
+                            "map": {
+                                "1": "<span class='label label-info'>医疗器械</span>",
+                                "2": "<span class='label label-info'>非医疗器械</span>",
+                                "3": "<span class='label label-info'>健康产品</span>",
+                            },
                         },
                         {
                             "name": "supplier",
@@ -181,12 +145,21 @@
                         {
                             "name": "location",
                             "label": "存放仓库",
-                            "searchable":
-                            {
-                                "type": "input-text",
-                                "name": "location",
-                                "label": "存放仓库",
-                            }
+                            "type": "mapping",
+                            "map": {
+                                "5301": "<span class='label label-info'>5301</span>",
+                                "5302": "<span class='label label-info'>5302</span>",
+                                "5402": "<span class='label label-info'>5402</span>",
+                                "5403": "<span class='label label-info'>5403</span>",
+                                "5404": "<span class='label label-info'>5404</span>",
+                                "5405": "<span class='label label-info'>5405</span>",
+                                "5406": "<span class='label label-info'>5406</span>",
+                                "5407": "<span class='label label-info'>5407</span>",
+                                "5408": "<span class='label label-info'>5408</span>",
+                                "5409": "<span class='label label-info'>5409</span>",
+                                "5410": "<span class='label label-info'>5410</span>",
+                                "5411": "<span class='label label-info'>5411</span>",
+                            },
                         },
                         {
                             "name": "batch_no_produce",
@@ -195,13 +168,14 @@
                         {
                             "name": "produce_date",
                             "label": "生产日期",
-                            "searchable":
-                            {
-                                "type": "input-date",
-                                "name": "produce_date",
-                                "label": "生产日期",
-                                "format": "YYYY-MM-DD"
-                            }
+                        },
+                        {
+                            "name": "disinfection_no",
+                            "label": "灭菌批号",
+                        },
+                        {
+                            "name": "disinfection_date",
+                            "label": "灭菌日期",
                         },
                         {
                             "name": "stock_date",

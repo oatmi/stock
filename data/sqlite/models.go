@@ -7,24 +7,26 @@ package sqlite
 import ()
 
 type Stock struct {
-	ID             int32  `json:"id"`
-	Name           string `json:"name"`
-	Status         int32  `json:"status"`
-	ProductType    int32  `json:"product_type"`
-	Type           int32  `json:"type"`
-	Supplier       string `json:"supplier"`
-	Model          string `json:"model"`
-	Unit           string `json:"unit"`
-	Price          int32  `json:"price"`
-	BatchNoIn      string `json:"batch_no_in"`
-	WayIn          string `json:"way_in"`
-	Location       string `json:"location"`
-	BatchNoProduce string `json:"batch_no_produce"`
-	ProduceDate    string `json:"produce_date"`
-	StockDate      string `json:"stock_date"`
-	StockNum       int32  `json:"stock_num"`
-	CurrentNum     int32  `json:"current_num"`
-	Value          int32  `json:"value"`
+	ID               int32  `json:"id"`
+	Status           int32  `json:"status"`
+	Name             string `json:"name"`
+	ProductType      int32  `json:"product_type"`
+	ProductAttr      int32  `json:"product_attr"`
+	Supplier         string `json:"supplier"`
+	Model            string `json:"model"`
+	Unit             string `json:"unit"`
+	Price            int32  `json:"price"`
+	BatchNoIn        string `json:"batch_no_in"`
+	WayIn            string `json:"way_in"`
+	Location         int32  `json:"location"`
+	BatchNoProduce   string `json:"batch_no_produce"`
+	ProduceDate      string `json:"produce_date"`
+	DisinfectionNo   string `json:"disinfection_no"`
+	DisinfectionDate string `json:"disinfection_date"`
+	StockDate        string `json:"stock_date"`
+	StockNum         int32  `json:"stock_num"`
+	CurrentNum       int32  `json:"current_num"`
+	Value            int32  `json:"value"`
 }
 
 type StockApplication struct {
