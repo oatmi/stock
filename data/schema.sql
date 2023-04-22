@@ -33,10 +33,11 @@ CREATE TABLE stock_applications (
 );
 
 CREATE TABLE stock_out_applications (
-  id INTEGER PRIMARY KEY,
-  stockids TEXT NOT NULL,
-  status INTEGER NOT NULL, -- 1: initiate, 2: wait approve, 3: prooved, 4: rejected
-  application_user TEXT NOT NULL,
-  approve_user TEXT NOT NULL,
-  create_date TEXT NOT NULL
+    id INTEGER PRIMARY KEY,
+    stockids TEXT NOT NULL,
+    number INTEGER NOT NULL,
+    status INTEGER NOT NULL, -- 1: initiate, 2: wait approve, 3: prooved, 4: rejected
+    application_user TEXT NOT NULL,
+    approve_user TEXT NOT NULL,
+    create_date TEXT NOT NULL
 );

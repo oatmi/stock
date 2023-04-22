@@ -12,7 +12,9 @@ import (
 )
 
 type OutStockRequest struct {
-	IDs string `json:"ids"`
+	ID            int `json:"id"`
+	Number        int `json:"number"`
+	CurrentNumber int `json:"current_num"`
 }
 
 // OutStockCreate 创建出库申请单
@@ -24,9 +26,20 @@ func OutStockCreate(c *gin.Context) {
 		return
 	}
 
+	if stocks.Number <= 0 || stocks.CurrentNumber <= 0 {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E102] 库存数量错误"})
+		return
+	}
+
+	if stocks.Number > stocks.CurrentNumber {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E103] 超过库存数量"})
+		return
+	}
+
 	query := sqlite.New(data.Sqlite3)
 	param := sqlite.CreateOutApplicationParams{
-		Stockids:        stocks.IDs,
+		Stockids:        cast.ToString(stocks.ID),
+		Number:          int32(stocks.Number),
 		Status:          2,
 		ApplicationUser: "admin",
 		ApproveUser:     "yangtao",
@@ -34,11 +47,22 @@ func OutStockCreate(c *gin.Context) {
 	}
 	err = query.CreateOutApplication(c, param)
 	if err != nil {
-		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 数据写入错误"})
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E104] 数据写入错误"})
 		return
 	}
 
 	c.JSON(http.StatusOK, AisudaiResponse{Status: 0, Message: "出库申请提交成功"})
+}
+
+type OutStockListItem struct {
+	ID              int32  `json:"id"`
+	Name            string `json:"name"`
+	Number          int    `json:"number"`
+	StockID         int32  `json:"stock_id"`
+	Status          int32  `json:"status"`
+	ApplicationUser string `json:"application_user"`
+	ApproveUser     string `json:"approve_user"`
+	CreateDate      string `json:"create_date"`
 }
 
 func OutStockList(c *gin.Context) {
@@ -57,7 +81,7 @@ func OutStockList(c *gin.Context) {
 
 	list, err := query.ListOutApplications(c, buildOutApplicationParams(c))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, nil)
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: err.Error()})
 		return
 	}
 
@@ -66,7 +90,26 @@ func OutStockList(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: list})
+	var resp []OutStockListItem
+	for _, l := range list {
+		s, err := query.StocksByID(c, cast.ToInt32(l.Stockids))
+		if err != nil {
+			continue
+		}
+
+		resp = append(resp, OutStockListItem{
+			ID:              l.ID,
+			Name:            s.Name,
+			Number:          int(l.Number),
+			StockID:         s.ID,
+			Status:          l.Status,
+			ApplicationUser: l.ApplicationUser,
+			ApproveUser:     l.ApproveUser,
+			CreateDate:      l.CreateDate,
+		})
+	}
+
+	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: resp})
 	return
 }
 

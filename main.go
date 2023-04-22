@@ -25,6 +25,7 @@ func main() {
 	}
 
 	api := router.Group("/api")
+
 	{
 		api.GET("/home", handlers.GetStocks)
 		api.GET("/instock", handlers.GetApplications)

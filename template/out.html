@@ -74,31 +74,31 @@
                     "api": "/api/home",
                     "syncLocation": false,
                     "autoGenerateFilter": true,
-                    "bulkActions": [
-                      {
-                        "label": "出库",
-                        "actionType": "dialog",
-                        "dialog": {
-                          "title": "确认出库？",
-                          "body": {
-                            "type": "form",
-                            "api": "/api/out/stock",
-                            "body": [
-                              {
-                                "type": "hidden",
-                                "name": "ids"
-                              },
-                              // {
-                              //   "type": "input-text",
-                              //   "name": "engine",
-                              //   "label": "Engine"
-                              // }
-                            ]
-                          }
-                        }
-                      }
-                    ],
-                    "headerToolbar": [ "bulkActions"],
+                    // "bulkActions": [
+                    //   {
+                    //     "label": "出库",
+                    //     "actionType": "dialog",
+                    //     "dialog": {
+                    //       "title": "确认出库？",
+                    //       "body": {
+                    //         "type": "form",
+                    //         "api": "/api/out/stock",
+                    //         "body": [
+                    //           {
+                    //             "type": "hidden",
+                    //             "name": "ids"
+                    //           },
+                    //           {
+                    //             "type": "input-text",
+                    //             "name": "bulkActions",
+                    //             "label": "货品名称"
+                    //           }
+                    //         ]
+                    //       }
+                    //     }
+                    //   }
+                    // ],
+                    // "headerToolbar": [ "bulkActions"],
                     "columns":
                     [
                         {
@@ -233,6 +233,50 @@
                             "name": "value",
                             "label": "当前价值"
                         },
+                        {
+                            "type": "operation",
+                            "label": "操作",
+                            "buttons": [
+                                {
+                                    "label": "出库申请",
+                                    "type": "button",
+                                    "actionType": "dialog",
+                                    "icon": "fa-solid fa-person-circle-check",
+                                    "dialog": {
+                                        // https://aisuda.bce.baidu.com/amis/zh-CN/components/form/index
+                                        "title": "出库申请",
+                                        "body": {
+                                            "type": "form",
+                                            "api": "post:/api/out/stock",
+                                            "body": [
+                                                {
+                                                    "type": "hidden",
+                                                    "name": "id",
+                                                    "disabled": true
+                                                },
+                                                {
+                                                    "type": "input-text",
+                                                    "name": "name",
+                                                    "label": "货品名称",
+                                                    "disabled": true
+                                                },
+                                                {
+                                                    "type": "input-text",
+                                                    "name": "current_num",
+                                                    "label": "当前数量",
+                                                    "disabled": true
+                                                },
+                                                {
+                                                    "type": "input-number",
+                                                    "name": "number",
+                                                    "label": "出库数量"
+                                                }
+                                            ]
+                                        },
+                                    }
+                                }
+                            ],
+                        }
                     ],
                 }
             ]

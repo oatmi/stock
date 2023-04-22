@@ -2,20 +2,24 @@ package handlers
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
-	"github.com/spf13/cast"
 )
 
 type ApproveOutRequest struct {
-	ID       int    `json:"id"`
-	Stockids string `json:"stockids"`
-	Status   int    `json:"status"`
+	ID      int `json:"id"`
+	StockID int `json:"stock_id"`
+	Status  int `json:"status"`
 }
 
+// ApproveOut 出库审核
+//
+// 1. 分别获取出库表和库存表的数据
+// 2. 基础的数据判断，如出库数量、剩余数量等
+// 3. 减少库存数量
+// 4. 修改出库表状态
 func ApproveOut(c *gin.Context) {
 	var req ApproveOutRequest
 	err := c.BindJSON(&req)
@@ -24,24 +28,35 @@ func ApproveOut(c *gin.Context) {
 		return
 	}
 
-	stockID := strings.Split(req.Stockids, ",")
-	if len(stockID) == 0 {
-		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 参数错误"})
+	query := sqlite.New(data.Sqlite3)
+
+	stock, err := query.StocksByID(c, int32(req.StockID))
+	if err != nil {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E100] 参数错误"})
 		return
 	}
 
-	query := sqlite.New(data.Sqlite3)
+	out, err := query.OutApplicationByID(c, int32(req.ID))
+	if err != nil {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E100] 参数错误"})
+		return
+	}
+
+	left := stock.CurrentNum - out.Number
+	if left < 0 {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E100] 剩余库存不足"})
+		return
+	}
+
 	if req.Status == 1 {
-		for _, strID := range stockID {
-			updateStockParam := sqlite.UpdateStockStatusByIDParams{
-				Status: 3,
-				ID:     int32(cast.ToInt(strID)),
-			}
-			err := query.UpdateStockStatusByID(c, updateStockParam)
-			if err != nil {
-				c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 更新库存失败"})
-				return
-			}
+		updateStockParam := sqlite.UpdateStockNumberParams{
+			CurrentNum: left,
+			ID:         int32(req.StockID),
+		}
+		err := query.UpdateStockNumber(c, updateStockParam)
+		if err != nil {
+			c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 更新库存失败"})
+			return
 		}
 
 		updateApproveParam := sqlite.UpdateApplicationOUTParams{
@@ -65,5 +80,5 @@ func ApproveOut(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusOK, AisudaiResponse{})
 }

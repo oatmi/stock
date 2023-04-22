@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
+	"github.com/spf13/cast"
 )
 
 type AisudaiResponse struct {
@@ -60,17 +62,17 @@ func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 	// 	arg.Location = val
 	// }
 
-	//if val, ok := c.GetQuery("status"); ok && val != "" {
-	//	arg.Status = sql.NullInt32{
-	//		Int32: cast.ToInt32(val),
-	//		Valid: true,
-	//	}
-	//} else {
-	//	arg.Status = sql.NullInt32{
-	//		Int32: 1,
-	//		Valid: true,
-	//	}
-	//}
+	if val, ok := c.GetQuery("status"); ok && val != "" {
+		arg.Status = sql.NullInt32{
+			Int32: cast.ToInt32(val),
+			Valid: true,
+		}
+	} else {
+		arg.Status = sql.NullInt32{
+			Int32: 1,
+			Valid: true,
+		}
+	}
 	//fmt.Printf("debug: %+v\n", arg)
 	return arg
 }
