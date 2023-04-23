@@ -58,6 +58,7 @@ type OutStockListItem struct {
 	ID              int32  `json:"id"`
 	Name            string `json:"name"`
 	Number          int    `json:"number"`
+	CurrentNumber   int    `json:"current_number"`
 	StockID         int32  `json:"stock_id"`
 	Status          int32  `json:"status"`
 	ApplicationUser string `json:"application_user"`
@@ -101,6 +102,7 @@ func OutStockList(c *gin.Context) {
 			ID:              l.ID,
 			Name:            s.Name,
 			Number:          int(l.Number),
+			CurrentNumber:   int(s.CurrentNum),
 			StockID:         s.ID,
 			Status:          l.Status,
 			ApplicationUser: l.ApplicationUser,

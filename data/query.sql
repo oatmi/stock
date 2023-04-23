@@ -34,8 +34,8 @@ WHERE id = $2;
 
 -- name: UpdateStockPriceByID :exec
 UPDATE stocks
-SET price = $1
-WHERE id = $2;
+SET price = $1, value = $2
+WHERE id = $3;
 
 -- name: CountStocks :one
 SELECT count(*) FROM stocks;
