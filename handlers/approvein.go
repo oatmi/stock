@@ -24,13 +24,23 @@ func ApproveIN(c *gin.Context) {
 	}
 
 	query := sqlite.New(data.Sqlite3)
+
+	application, err := query.ApplicationByID(c, int32(req.ID))
+	if err != nil {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 参数错误"})
+		return
+	}
+	if application.Status > 2 {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E102] 已审核"})
+		return
+	}
+
 	if req.Status == 1 {
-		updateStockParam := sqlite.UpdateStocksParams{
-			Status:    1,
-			BatchNoIn: req.BatchNoIn,
-			Status_2:  2,
+		updateStockParam := sqlite.UpdateStockStatusByIDParams{
+			Status: 1,
+			ID:     application.StockID,
 		}
-		err := query.UpdateStocks(c, updateStockParam)
+		err := query.UpdateStockStatusByID(c, updateStockParam)
 		if err != nil {
 			c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 更新库存失败"})
 			return
@@ -46,14 +56,13 @@ func ApproveIN(c *gin.Context) {
 			return
 		}
 	} else {
-		updateStockParam := sqlite.UpdateStocksParams{
-			Status:    4,
-			BatchNoIn: req.BatchNoIn,
-			Status_2:  2,
+		updateStockParam := sqlite.UpdateStockStatusByIDParams{
+			Status: 4,
+			ID:     application.StockID,
 		}
-		err := query.UpdateStocks(c, updateStockParam)
+		err := query.UpdateStockStatusByID(c, updateStockParam)
 		if err != nil {
-			c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E103] 更新库存失败"})
+			c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 更新库存失败"})
 			return
 		}
 

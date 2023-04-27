@@ -11,6 +11,20 @@ import (
 	"github.com/spf13/cast"
 )
 
+type ApplicationItem struct {
+	ID              int32  `json:"id"`
+	StockName       string `json:"stock_name"`
+	StockID         int32  `json:"stock_id"`
+	Number          int32  `json:"number"`
+	ApplicationDate string `json:"application_date"`
+	BatchNoIn       string `json:"batch_no_in"`
+	Status          int32  `json:"status"`
+	ApplicationUser string `json:"application_user"`
+	ApproveUser     string `json:"approve_user"`
+	ApproveDate     string `json:"approve_date"`
+	CreateDate      string `json:"create_date"`
+}
+
 // GetStocks 获取库存数据
 func GetApplications(c *gin.Context) {
 	query := sqlite.New(data.Sqlite3)
@@ -37,7 +51,29 @@ func GetApplications(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: list})
+	var resp []ApplicationItem
+	for _, s := range list {
+		stock, err := query.StocksByID(c, s.StockID)
+		if err != nil {
+			continue
+		}
+
+		resp = append(resp, ApplicationItem{
+			ID:              s.ID,
+			StockName:       stock.Name,
+			StockID:         s.StockID,
+			Number:          stock.StockNum,
+			ApplicationDate: s.ApplicationDate,
+			BatchNoIn:       s.BatchNoIn,
+			Status:          s.Status,
+			ApplicationUser: s.ApplicationUser,
+			ApproveUser:     s.ApproveUser,
+			ApproveDate:     s.ApproveDate,
+			CreateDate:      s.CreateDate,
+		})
+	}
+
+	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: resp})
 	return
 }
 

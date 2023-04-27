@@ -1,6 +1,6 @@
 CREATE TABLE stocks (
     id INTEGER PRIMARY KEY,
-    status INTEGER NOT NULL,            -- 1: ok, 2: waitIN, 3: outed
+    status INTEGER NOT NULL,            -- 1: ok, 2: waitIN, 3: outed, 4: rejected
     name TEXT NOT NULL,                 -- 货品名称
     product_type INTEGER NOT NULL,      -- 货品类型 1:主材，2:辅材，3:半成品，4:成品
     product_attr INTEGER NOT NULL,      -- 货品属性 1:医疗器械，2:非医疗器械，3:健康产品
@@ -22,12 +22,13 @@ CREATE TABLE stocks (
 );
 
 CREATE TABLE stock_applications (
-	id INTEGER PRIMARY KEY,
-	application_date TEXT NOT NULL,
+    id INTEGER PRIMARY KEY,
+    stock_id INTEGER NOT NULL,
+    application_date TEXT NOT NULL,
     batch_no_in TEXT NOT NULL, -- 入库批号
     status INTEGER NOT NULL, -- 1: initiate, 2: wait approve, 3: prooved, 4: rejected
-	application_user TEXT NOT NULL,
-	approve_user TEXT NOT NULL,
+    application_user TEXT NOT NULL,
+    approve_user TEXT NOT NULL,
     approve_date TEXT NOT NULL,
     create_date TEXT NOT NULL
 );

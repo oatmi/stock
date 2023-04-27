@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
+	"github.com/oatmi/stock/lib"
 	"github.com/spf13/cast"
 )
 
@@ -39,20 +40,6 @@ func PutStock(c *gin.Context) {
 	}
 
 	query := sqlite.New(data.Sqlite3)
-
-	// application := sqlite.CreateStockApplicationParams{
-	// 	ApplicationDate: lib.CurrentDate(),
-	// 	BatchNoIn:       stocks.BatchNoIn,
-	// 	Status:          1,       // 1: initiate, 2: wait approve, 3: prooved, 4: rejected
-	// 	ApplicationUser: "admin", // TODO
-	// 	CreateDate:      lib.CurrentDate(),
-	// }
-	// err = query.CreateStockApplication(c, application)
-	// if err != nil {
-	// 	c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 提交申请失败" + err.Error()})
-	// 	return
-	// }
-
 	createParam := sqlite.CreateStockParams{
 		Status:           2, // 1: ok, 2: waitIN, 3: outed 4: declined
 		Name:             stock.Name,
@@ -74,8 +61,22 @@ func PutStock(c *gin.Context) {
 		CurrentNum:       cast.ToInt32(stock.StockNum),
 		Value:            cast.ToInt32(stock.StockNum) * cast.ToInt32(stock.Price),
 	}
-	err = query.CreateStock(c, createParam)
-	if err == nil {
+	newStock, err := query.CreateStock(c, createParam)
+	if err != nil {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 提交申请失败" + err.Error()})
+		return
+	}
+
+	application := sqlite.CreateStockApplicationParams{
+		StockID:         newStock.ID,
+		ApplicationDate: lib.CurrentDate(),
+		BatchNoIn:       stock.BatchNoIn,
+		Status:          1,       // 1: initiate, 2: wait approve, 3: prooved, 4: rejected
+		ApplicationUser: "admin", // TODO
+		CreateDate:      lib.CurrentDate(),
+	}
+	err = query.CreateStockApplication(c, application)
+	if err != nil {
 		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 提交申请失败" + err.Error()})
 		return
 	}

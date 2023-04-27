@@ -6,12 +6,13 @@ WHERE
   (product_type = sqlc.narg('product_type') OR sqlc.narg('product_type') IS NULL) AND
   (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL);
 
--- name: CreateStock :exec
+-- name: CreateStock :one
 INSERT INTO stocks (status, name, product_type, product_attr,
     supplier, model, unit, price, batch_no_in, way_in, location,
     batch_no_produce, produce_date, disinfection_no, disinfection_date,
     stock_date, stock_num, current_num, value)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19);
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
+RETURNING *;
 
 -- name: UpdateStocks :exec
 UPDATE stocks
@@ -49,10 +50,13 @@ WHERE
   (application_user = sqlc.narg('application_user') OR sqlc.narg('application_user') IS NULL) AND
   (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL);
 
+-- name: ApplicationByID :one
+SELECT * FROM stock_applications WHERE id = $1;
+
 -- name: CreateStockApplication :exec
-INSERT INTO stock_applications(application_date, batch_no_in, status,
+INSERT INTO stock_applications(stock_id, application_date, batch_no_in, status,
     application_user, approve_date, approve_user, create_date)
-VALUES ($1,$2,$3,$4,$5,$6,$7);
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8);
 
 -- name: UpdateApplicationIN :exec
 UPDATE stock_applications

@@ -6,5 +6,5 @@ import "time"
 //
 // e.g. 2006-01-02 15:04:05
 func CurrentDate() string {
-	return time.Now().Format(time.DateTime)
+	return time.Now().Format("2006-01-02 15:04:05")
 }
