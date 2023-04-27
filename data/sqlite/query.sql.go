@@ -287,16 +287,27 @@ WHERE
   (name LIKE $1 OR $1 IS NULL) AND
   (product_type = $2 OR $2 IS NULL) AND
   (status = $3 OR $3 IS NULL)
+ORDER BY id DESC 
+LIMIT $5
+OFFSET $4
 `
 
 type ListStocksParams struct {
 	Name        sql.NullString `json:"name"`
 	ProductType sql.NullInt32  `json:"product_type"`
 	Status      sql.NullInt32  `json:"status"`
+	Offset      sql.NullInt32  `json:"offset"`
+	Limit       sql.NullInt32  `json:"limit"`
 }
 
 func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock, error) {
-	rows, err := q.db.QueryContext(ctx, listStocks, arg.Name, arg.ProductType, arg.Status)
+	rows, err := q.db.QueryContext(ctx, listStocks,
+		arg.Name,
+		arg.ProductType,
+		arg.Status,
+		arg.Offset,
+		arg.Limit,
+	)
 	if err != nil {
 		return nil, err
 	}

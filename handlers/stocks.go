@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -42,13 +43,23 @@ func GetStocks(c *gin.Context) {
 }
 
 func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
-	arg := sqlite.ListStocksParams{}
-	// if val, ok := c.GetQuery("Name"); ok && val != "" {
-	// 	arg.Name = sql.NullString{
-	// 		String: "%" + val + "%",
-	// 		Valid:  true,
-	// 	}
-	// }
+	arg := sqlite.ListStocksParams{
+		Limit: sql.NullInt32{
+			Int32: (cast.ToInt32(c.DefaultQuery("page", "0")) - 1) * 10,
+			Valid: true,
+		},
+		Offset: sql.NullInt32{
+			Int32: 10,
+			Valid: true,
+		},
+	}
+
+	if val, ok := c.GetQuery("Name"); ok && val != "" {
+		arg.Name = sql.NullString{
+			String: "%" + val + "%",
+			Valid:  true,
+		}
+	}
 	// if val, ok := c.GetQuery("ProductType"); ok {
 	// 	arg.ProductType = cast.ToInt64(val)
 	// }
@@ -73,6 +84,7 @@ func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 			Valid: true,
 		}
 	}
-	//fmt.Printf("debug: %+v\n", arg)
+	fmt.Printf("debug: %+v\n", arg)
+
 	return arg
 }

@@ -4,7 +4,10 @@ FROM stocks
 WHERE
   (name LIKE sqlc.narg('name') OR sqlc.narg('name') IS NULL) AND
   (product_type = sqlc.narg('product_type') OR sqlc.narg('product_type') IS NULL) AND
-  (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL);
+  (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL)
+ORDER BY id DESC 
+LIMIT sqlc.narg('limit')
+OFFSET sqlc.narg('offset');
 
 -- name: CreateStock :one
 INSERT INTO stocks (status, name, product_type, product_attr,
