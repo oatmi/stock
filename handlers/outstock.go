@@ -69,12 +69,13 @@ type OutStockListItem struct {
 func OutStockList(c *gin.Context) {
 	query := sqlite.New(data.Sqlite3)
 
-	count, err := query.CountStocks(c)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, nil)
-		return
-	}
+	// count, err := query.CountStocks(c)
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, nil)
+	// 	return
+	// }
 
+	count := 1
 	if count == 0 {
 		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
 		return

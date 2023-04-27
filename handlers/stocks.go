@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -26,13 +27,22 @@ type AisudaiCRUDData struct {
 func GetStocks(c *gin.Context) {
 	query := sqlite.New(data.Sqlite3)
 
-	list, err := query.ListStocks(c, buildListStockParams(c))
+	listParam := buildListStockParams(c)
+	list, err := query.ListStocks(c, listParam)
 	if err != nil {
 		c.JSON(http.StatusOK, AisudaiResponse{Message: "无数据 " + err.Error()})
 		return
 	}
+	if len(list) == 0 {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
+		return
+	}
 
-	count, err := query.CountStocks(c)
+	var countParam sqlite.CountStocksParams
+	listParamByte, _ := json.Marshal(listParam)
+	json.Unmarshal(listParamByte, &countParam)
+
+	count, err := query.CountStocks(c, countParam)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, nil)
 		return
@@ -54,25 +64,12 @@ func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 		},
 	}
 
-	if val, ok := c.GetQuery("Name"); ok && val != "" {
+	if val, ok := c.GetQuery("name"); ok && val != "" {
 		arg.Name = sql.NullString{
 			String: "%" + val + "%",
 			Valid:  true,
 		}
 	}
-	// if val, ok := c.GetQuery("ProductType"); ok {
-	// 	arg.ProductType = cast.ToInt64(val)
-	// }
-	// if val, ok := c.GetQuery("Type"); ok {
-	// 	arg.Type = cast.ToInt64(val)
-	// }
-	// if val, ok := c.GetQuery("ProduceDate"); ok {
-	// 	arg.ProduceDate = val
-	// }
-	// if val, ok := c.GetQuery("Location"); ok {
-	// 	arg.Location = val
-	// }
-
 	if val, ok := c.GetQuery("status"); ok && val != "" {
 		arg.Status = sql.NullInt32{
 			Int32: cast.ToInt32(val),
