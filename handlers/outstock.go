@@ -69,25 +69,23 @@ type OutStockListItem struct {
 func OutStockList(c *gin.Context) {
 	query := sqlite.New(data.Sqlite3)
 
-	// count, err := query.CountStocks(c)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, nil)
-	// 	return
-	// }
-
-	count := 1
-	if count == 0 {
-		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
-		return
-	}
-
-	list, err := query.ListOutApplications(c, buildOutApplicationParams(c))
+	listParam := buildOutApplicationParams(c)
+	list, err := query.ListOutApplications(c, listParam)
 	if err != nil {
 		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: err.Error()})
 		return
 	}
 
 	if len(list) == 0 {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
+		return
+	}
+
+	var countParam sqlite.CountOutApplicationParams
+	lib.ConvertTo(listParam, &countParam)
+	count, err := query.CountOutApplication(c, countParam)
+
+	if count == 0 {
 		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
 		return
 	}
@@ -117,7 +115,16 @@ func OutStockList(c *gin.Context) {
 }
 
 func buildOutApplicationParams(ctx *gin.Context) sqlite.ListOutApplicationsParams {
-	arg := sqlite.ListOutApplicationsParams{}
+	arg := sqlite.ListOutApplicationsParams{
+		Limit: sql.NullInt32{
+			Int32: (cast.ToInt32(ctx.DefaultQuery("page", "0")) - 1) * 10,
+			Valid: true,
+		},
+		Offset: sql.NullInt32{
+			Int32: 10,
+			Valid: true,
+		},
+	}
 	if val, ok := ctx.GetQuery("application_user"); ok && val != "" {
 		arg.ApplicationUser = sql.NullString{
 			String: val,

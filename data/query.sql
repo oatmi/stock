@@ -92,8 +92,19 @@ VALUES ($1,$2,$3,$4,$5,$6);
 SELECT *
 FROM stock_out_applications
 WHERE
-  (application_user >= sqlc.narg('application_user') OR sqlc.narg('application_user') IS NULL) AND
-  (approve_user <= sqlc.narg('approve_user') OR sqlc.narg('approve_user') IS NULL) AND
+  (application_user = sqlc.narg('application_user') OR sqlc.narg('application_user') IS NULL) AND
+  (approve_user = sqlc.narg('approve_user') OR sqlc.narg('approve_user') IS NULL) AND
+  (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL)
+ORDER BY id DESC 
+LIMIT sqlc.narg('limit')
+OFFSET sqlc.narg('offset');
+
+-- name: CountOutApplication :one
+SELECT COUNT(*)
+FROM stock_out_applications
+WHERE
+  (application_user = sqlc.narg('application_user') OR sqlc.narg('application_user') IS NULL) AND
+  (approve_user = sqlc.narg('approve_user') OR sqlc.narg('approve_user') IS NULL) AND
   (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL);
 
 -- name: UpdateApplicationOUT :exec
