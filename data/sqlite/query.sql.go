@@ -31,6 +31,35 @@ func (q *Queries) ApplicationByID(ctx context.Context, id int32) (StockApplicati
 	return i, err
 }
 
+const countApplications = `-- name: CountApplications :one
+SELECT count(*)
+FROM stock_applications
+WHERE
+  (application_date >= $1 OR $1 IS NULL) AND
+  (application_date <= $2 OR $2 IS NULL) AND
+  (application_user = $3 OR $3 IS NULL) AND
+  (status = $4 OR $4 IS NULL)
+`
+
+type CountApplicationsParams struct {
+	ApplicationDateS sql.NullString `json:"application_date_s"`
+	ApplicationDateE sql.NullString `json:"application_date_e"`
+	ApplicationUser  sql.NullString `json:"application_user"`
+	Status           sql.NullInt32  `json:"status"`
+}
+
+func (q *Queries) CountApplications(ctx context.Context, arg CountApplicationsParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countApplications,
+		arg.ApplicationDateS,
+		arg.ApplicationDateE,
+		arg.ApplicationUser,
+		arg.Status,
+	)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const countStocks = `-- name: CountStocks :one
 SELECT count(*) FROM stocks
 WHERE
@@ -197,6 +226,9 @@ WHERE
   (application_date <= $2 OR $2 IS NULL) AND
   (application_user = $3 OR $3 IS NULL) AND
   (status = $4 OR $4 IS NULL)
+ORDER BY id DESC 
+LIMIT $6
+OFFSET $5
 `
 
 type ListApplicationsParams struct {
@@ -204,6 +236,8 @@ type ListApplicationsParams struct {
 	ApplicationDateE sql.NullString `json:"application_date_e"`
 	ApplicationUser  sql.NullString `json:"application_user"`
 	Status           sql.NullInt32  `json:"status"`
+	Offset           sql.NullInt32  `json:"offset"`
+	Limit            sql.NullInt32  `json:"limit"`
 }
 
 func (q *Queries) ListApplications(ctx context.Context, arg ListApplicationsParams) ([]StockApplication, error) {
@@ -212,6 +246,8 @@ func (q *Queries) ListApplications(ctx context.Context, arg ListApplicationsPara
 		arg.ApplicationDateE,
 		arg.ApplicationUser,
 		arg.Status,
+		arg.Offset,
+		arg.Limit,
 	)
 	if err != nil {
 		return nil, err

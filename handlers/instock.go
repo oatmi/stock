@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
+	"github.com/oatmi/stock/lib"
 	"github.com/spf13/cast"
 )
 
@@ -29,25 +31,29 @@ type ApplicationItem struct {
 func GetApplications(c *gin.Context) {
 	query := sqlite.New(data.Sqlite3)
 
-	count := 1
-	//count, err := query.CountStocks(c)
-	//if err != nil {
-	//	c.JSON(http.StatusInternalServerError, nil)
-	//	return
-	//}
-
-	if count == 0 {
-		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
-		return
-	}
-
-	list, err := query.ListApplications(c, buildApplicationParams(c))
+	listParam := buildApplicationParams(c)
+	list, err := query.ListApplications(c, listParam)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, nil)
 		return
 	}
 
 	if len(list) == 0 {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
+		return
+	}
+
+	var countParam sqlite.CountApplicationsParams
+	listParamByte, _ := json.Marshal(listParam)
+	json.Unmarshal(listParamByte, &countParam)
+
+	count, err := query.CountApplications(c, countParam)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	if count == 0 {
 		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
 		return
 	}
@@ -82,22 +88,31 @@ func GetApplications(c *gin.Context) {
 //
 // page=1&date=1675180800,1677599999&user_name=test&status=1&perPage=10
 func buildApplicationParams(ctx *gin.Context) sqlite.ListApplicationsParams {
-	arg := sqlite.ListApplicationsParams{}
+	arg := sqlite.ListApplicationsParams{
+		Limit: sql.NullInt32{
+			Int32: (cast.ToInt32(ctx.DefaultQuery("page", "0")) - 1) * 10,
+			Valid: true,
+		},
+		Offset: sql.NullInt32{
+			Int32: 10,
+			Valid: true,
+		},
+	}
 	if val, ok := ctx.GetQuery("application_date"); ok && val != "" {
 		arrData := strings.Split(val, ",")
 		if len(arrData) == 2 {
 			start := cast.ToInt(arrData[0])
 			if start > 0 {
 				arg.ApplicationDateS = sql.NullString{
-					String: arrData[0],
+					String: lib.TimestampToDate(cast.ToInt64(arrData[0])),
 					Valid:  true,
 				}
 			}
 
 			end := cast.ToInt(arrData[1])
 			if end > 0 {
-				arg.ApplicationDateS = sql.NullString{
-					String: arrData[1],
+				arg.ApplicationDateE = sql.NullString{
+					String: lib.TimestampToDate(cast.ToInt64(arrData[1])),
 					Valid:  true,
 				}
 			}

@@ -55,10 +55,22 @@ WHERE
   (application_date >= sqlc.narg('application_date_s') OR sqlc.narg('application_date_s') IS NULL) AND
   (application_date <= sqlc.narg('application_date_e') OR sqlc.narg('application_date_e') IS NULL) AND
   (application_user = sqlc.narg('application_user') OR sqlc.narg('application_user') IS NULL) AND
-  (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL);
+  (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL)
+ORDER BY id DESC 
+LIMIT sqlc.narg('limit')
+OFFSET sqlc.narg('offset');
 
 -- name: ApplicationByID :one
 SELECT * FROM stock_applications WHERE id = $1;
+
+-- name: CountApplications :one
+SELECT count(*)
+FROM stock_applications
+WHERE
+  (application_date >= sqlc.narg('application_date_s') OR sqlc.narg('application_date_s') IS NULL) AND
+  (application_date <= sqlc.narg('application_date_e') OR sqlc.narg('application_date_e') IS NULL) AND
+  (application_user = sqlc.narg('application_user') OR sqlc.narg('application_user') IS NULL) AND
+  (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL);
 
 -- name: CreateStockApplication :exec
 INSERT INTO stock_applications(stock_id, application_date, batch_no_in, status,
