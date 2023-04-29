@@ -90,11 +90,11 @@ func GetApplications(c *gin.Context) {
 func buildApplicationParams(ctx *gin.Context) sqlite.ListApplicationsParams {
 	arg := sqlite.ListApplicationsParams{
 		Limit: sql.NullInt32{
-			Int32: (cast.ToInt32(ctx.DefaultQuery("page", "0")) - 1) * 10,
+			Int32: 10,
 			Valid: true,
 		},
 		Offset: sql.NullInt32{
-			Int32: 10,
+			Int32: (cast.ToInt32(ctx.DefaultQuery("page", "0")) - 1) * 10,
 			Valid: true,
 		},
 	}

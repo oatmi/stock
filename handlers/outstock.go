@@ -117,11 +117,11 @@ func OutStockList(c *gin.Context) {
 func buildOutApplicationParams(ctx *gin.Context) sqlite.ListOutApplicationsParams {
 	arg := sqlite.ListOutApplicationsParams{
 		Limit: sql.NullInt32{
-			Int32: (cast.ToInt32(ctx.DefaultQuery("page", "0")) - 1) * 10,
+			Int32: 10,
 			Valid: true,
 		},
 		Offset: sql.NullInt32{
-			Int32: 10,
+			Int32: (cast.ToInt32(ctx.DefaultQuery("page", "0")) - 1) * 10,
 			Valid: true,
 		},
 	}

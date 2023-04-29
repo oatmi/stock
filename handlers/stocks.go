@@ -55,11 +55,11 @@ func GetStocks(c *gin.Context) {
 func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 	arg := sqlite.ListStocksParams{
 		Limit: sql.NullInt32{
-			Int32: (cast.ToInt32(c.DefaultQuery("page", "0")) - 1) * 10,
+			Int32: 10,
 			Valid: true,
 		},
 		Offset: sql.NullInt32{
-			Int32: 10,
+			Int32: (cast.ToInt32(c.DefaultQuery("page", "0")) - 1) * 10,
 			Valid: true,
 		},
 	}

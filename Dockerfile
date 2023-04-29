@@ -1,17 +1,20 @@
-# step-1: builder
-FROM --platform=linux/x86_64 golang:1.20.1 as builder
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc-x86-64-linux-gnu libc6-dev-amd64-cross git
+# builder
+FROM alpine AS builder
+RUN apk add --no-cache --update go
 
 WORKDIR ./src/github.com/oatmi/stock
 COPY go.* .
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=x86_64-linux-gnu-gcc go build -o /app/stock
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/stock
+COPY ./template/* /app/template/
+COPY ./sdk/* /app/sdk/
 
-# step-2
-FROM --platform=linux/x86_64 alpine:latest as runner
+# runner
+FROM alpine as runner
 COPY --from=builder /app/stock /app/stock
+COPY --from=builder /app/template/* /app/template/
+COPY --from=builder /app/sdk/* /app/sdk/
+WORKDIR /app
 EXPOSE 8888
-ENTRYPOINT ["/app/stock"]
+ENTRYPOINT ["./stock"]
