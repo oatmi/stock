@@ -128,17 +128,18 @@
                                                     },
                                                 },
                                                
+                                                
+                                            ]
+                                        },
+                                        {
+                                            "type": "group",
+                                            "body": [
                                                 {
                                                     "type": "input-text",
                                                     "name": "supplier",
                                                     "required": true,
                                                     "label": "供应商"
                                                 },
-                                            ]
-                                        },
-                                        {
-                                            "type": "group",
-                                            "body": [
                                                 {
                                                     "type": "input-text",
                                                     "name": "model",
@@ -151,6 +152,11 @@
                                                     "required": true,
                                                     "label": "单位"
                                                 },
+                                            ]
+                                        },
+                                        {
+                                            "type": "group",
+                                            "body": [
                                                 {
                                                     "type": "input-number",
                                                     "name": "price",
@@ -169,11 +175,6 @@
                                                         "4": "外购",
                                                     },
                                                 },
-                                            ]
-                                        },
-                                        {
-                                            "type": "group",
-                                            "body": [
                                                 {
                                                     "type": "select",
                                                     "name": "location",
@@ -194,24 +195,34 @@
                                                         "5411": "5411",
                                                     },
                                                 },
+                                                
+                                            ]
+                                        },
+                                        {
+                                            "type": "group",
+                                            "body": [
                                                 {
                                                     "type": "input-text",
                                                     "name": "batch_no_produce",
                                                     "required": true,
                                                     "label": "生产批号",
+                                                    "hiddenOn": "this.product_type!=4",
                                                 },
                                                 {
                                                     "type": "input-date",
                                                     "name": "produce_date",
                                                     "required": true,
                                                     "label": "生产日期",
+                                                    "hiddenOn": "this.product_type!=4",
                                                 },
                                                 {
                                                     "type": "input-text",
                                                     "name": "disinfection_no",
                                                     "required": true,
                                                     "label": "灭菌批号",
+                                                    "hiddenOn": "this.product_attr==2 || this.product_type!=4",
                                                 },
+                                                
                                             ]
                                         },
                                         {
@@ -222,6 +233,7 @@
                                                     "name": "disinfection_date",
                                                     "required": true,
                                                     "label": "灭菌日期",
+                                                    "hiddenOn": "this.product_attr==2 || this.product_type!=4",
                                                 },
                                                 {
                                                     "type": "input-number",
