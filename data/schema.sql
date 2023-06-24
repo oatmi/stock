@@ -9,7 +9,7 @@ CREATE TABLE stocks (
     unit TEXT NOT NULL,                 -- 单位
     price INTEGER NOT NULL,             -- 单价，分
     batch_no_in TEXT NOT NULL,          -- 入库批号
-    way_in INTEGER NOT NULL,            -- 入库方式 1:客供，2:内供，3:外发，外购
+    way_in INTEGER NOT NULL,            -- 入库方式 1:客供，2:期初，3:外发，外购
     location INTEGER NOT NULL,          -- 存放仓库 5301,5302,5402,5403,5404,5405,5406,5407,5408,5409,5410,5411
     batch_no_produce TEXT NOT NULL,     -- 生产批号
     produce_date INTEGER NOT NULL,      -- 生产日期
