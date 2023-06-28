@@ -70,7 +70,7 @@ func PutStock(c *gin.Context) {
 	application := sqlite.CreateStockApplicationParams{
 		StockID:         newStock.ID,
 		ApplicationDate: lib.CurrentDate(),
-		BatchNoIn:       stock.BatchNoIn,
+		BatchNoIn:       lib.NewBatchNO(),
 		Status:          1,       // 1: initiate, 2: wait approve, 3: prooved, 4: rejected
 		ApplicationUser: "admin", // TODO
 		CreateDate:      lib.CurrentDate(),

@@ -24,3 +24,10 @@ func ConvertTo(in, out interface{}) error {
 	}
 	return json.Unmarshal(bt, &out)
 }
+
+// NewBatchNO 入库批次号生成
+//
+// 当前日期数字表示
+func NewBatchNO() string {
+	return time.Now().Format("20060102150405")
+}
