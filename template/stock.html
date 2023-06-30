@@ -101,6 +101,19 @@
                             "name": "product_type",
                             "label": "货品类型",
                             "type": "mapping",
+                            "searchable": {
+                                "type": "select",
+                                "name": "product_type",
+                                "label": "货品类型",
+                                "options": [
+                                    { "label": "主材", "value": "1" },
+                                    { "label": "辅材", "value": "2" },
+                                    { "label": "半成品", "value": "3" },
+                                    { "label": "成品", "value": "4" },
+                                    { "label": "机货", "value": "5" },
+                                    { "label": "报废品", "value": "6" },
+                                  ]
+                            },
                             "map": {
                                 "1": "<span class='label label-info'>主材</span>",
                                 "2": "<span class='label label-info'>辅材</span>",

@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -70,6 +69,12 @@ func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 			Valid:  true,
 		}
 	}
+	if val, ok := c.GetQuery("product_type"); ok && val != "" {
+		arg.ProductType = sql.NullInt32{
+			Int32: cast.ToInt32(val),
+			Valid: true,
+		}
+	}
 	if val, ok := c.GetQuery("status"); ok && val != "" {
 		arg.Status = sql.NullInt32{
 			Int32: cast.ToInt32(val),
@@ -81,7 +86,6 @@ func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 			Valid: true,
 		}
 	}
-	fmt.Printf("debug: %+v\n", arg)
 
 	return arg
 }
