@@ -37,12 +37,6 @@ func GetStocks(c *gin.Context) {
 		return
 	}
 
-	for idx, l := range list {
-		if l.ProduceDate != 0 {
-
-		}
-	}
-
 	var countParam sqlite.CountStocksParams
 	listParamByte, _ := json.Marshal(listParam)
 	json.Unmarshal(listParamByte, &countParam)
