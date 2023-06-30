@@ -123,8 +123,6 @@
                                                         "3": "健康产品",
                                                     },
                                                 },
-                                               
-                                                
                                             ]
                                         },
                                         {
@@ -216,7 +214,7 @@
                                                     "name": "disinfection_no",
                                                     "required": true,
                                                     "label": "灭菌批号",
-                                                    "hiddenOn": "this.product_attr==2 || this.product_type!=4",
+                                                    "hiddenOn": "this.product_attr!=1",
                                                 },
                                                 
                                             ]
@@ -229,7 +227,7 @@
                                                     "name": "disinfection_date",
                                                     "required": true,
                                                     "label": "灭菌日期",
-                                                    "hiddenOn": "this.product_attr==2 || this.product_type!=4",
+                                                    "hiddenOn": "this.product_attr!=1",
                                                 },
                                                 {
                                                     "type": "input-number",
