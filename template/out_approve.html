@@ -31,43 +31,13 @@
         let amis = amisRequire("amis/embed");
         let amisJSON = {
             "type": "page",
-            "data":
-            {
-                "nav":
-                [
-                    {
-                        "label": "库存管理",
-                        "to": "/view/stock",
-                        "icon": "fa fa-boxes-stacked"
-                    },
-                    {
-                        "label": "入库管理",
-                        "to": "/view/in",
-                        "icon": "fa fa-inbox"
-                    },
-                    {
-                        "label": "出库管理",
-                        "to": "/view/out",
-                        "icon": "fa fa-right-from-bracket"
-                    },
-                    {
-                        "label": "出库审核",
-                        "to": "/view/out_approve",
-                        "icon": "fa fa-right-from-bracket"
-                    },
-                    {
-                        "label": "定价管理",
-                        "to": "/view/price",
-                        "icon": "fa fa-tag"
-                    }
-                ]
-            },
+            "data": { },
             "body":
             [
                 {
                     "type": "nav",
                     "stacked": false,
-                    "source": "${nav}"
+                    "source": "/api/navs"
                 },
                 {
                     "type": "crud",

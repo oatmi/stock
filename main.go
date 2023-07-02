@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
+	"github.com/oatmi/stock/data/account"
 	"github.com/oatmi/stock/handlers"
 )
 
@@ -14,7 +15,7 @@ func main() {
 
 	router.LoadHTMLGlob("template/*")
 
-	view := router.Group("/view")
+	view := router.Group("/view", gin.BasicAuth(account.Accounts))
 	{
 		view.GET("/stock", func(c *gin.Context) { c.HTML(http.StatusOK, "stock.html", nil) })
 		view.GET("/in", func(c *gin.Context) { c.HTML(http.StatusOK, "in.html", nil) })
@@ -24,11 +25,12 @@ func main() {
 		view.GET("/price", func(c *gin.Context) { c.HTML(http.StatusOK, "price.html", nil) })
 	}
 
-	api := router.Group("/api")
+	api := router.Group("/api", gin.BasicAuth(account.Accounts))
 	{
 		api.GET("/home", handlers.GetStocks)
 		api.GET("/instock", handlers.GetApplications)
 		api.GET("/outstock", handlers.OutStockList)
+		api.GET("/navs", handlers.Navs)
 
 		api.POST("/put/stock", handlers.PutStock)
 		api.POST("/out/stock", handlers.OutStockCreate)
