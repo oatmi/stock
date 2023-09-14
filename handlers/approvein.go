@@ -6,11 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
+	"github.com/spf13/cast"
 )
 
 type ApproveINRequest struct {
 	ID        int    `json:"id"`
 	Status    int    `json:"status"`
+	Price     int    `json:"price"`
+	Number    int    `json:"number"`
 	BatchNoIn string `json:"batch_no_in"`
 }
 
@@ -39,6 +42,8 @@ func ApproveIN(c *gin.Context) {
 		updateStockParam := sqlite.UpdateStockStatusByIDParams{
 			Status: 1,
 			ID:     application.StockID,
+			Price:  cast.ToInt32(req.Price),
+			Value:  cast.ToInt32(req.Price * req.Number),
 		}
 		err := query.UpdateStockStatusByID(c, updateStockParam)
 		if err != nil {

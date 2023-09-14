@@ -121,11 +121,17 @@
                                         {
                                             "type": "group",
                                             "body": [
-                                                {
+                                                // {
+                                                //     "type": "input-number",
+                                                //     "name": "price",
+                                                //     "required": true,
+                                                //     "label": "货品单价(分)"
+                                                // },
+                                               {
                                                     "type": "input-number",
-                                                    "name": "price",
+                                                    "name": "stock_num",
                                                     "required": true,
-                                                    "label": "货品单价(分)"
+                                                    "label": "入库数量",
                                                 },
                                                 {
                                                     "type": "select",
@@ -198,12 +204,6 @@
                                                     "required": true,
                                                     "label": "灭菌日期",
                                                     "hiddenOn": "this.product_attr!=1",
-                                                },
-                                                {
-                                                    "type": "input-number",
-                                                    "name": "stock_num",
-                                                    "required": true,
-                                                    "label": "入库数量",
                                                 },
                                             ]
                                         }
@@ -331,12 +331,21 @@
                                                     "falseValue": 0
                                                 },
                                                 {
+                                                    "type": "input-number",
+                                                    "name": "price",
+                                                    "label": "单价(单位分)",
+                                                },
+                                                {
                                                     "type": "hidden",
                                                     "name": "id",
                                                 },
                                                 {
                                                     "type": "hidden",
                                                     "name": "batch_no_in",
+                                                },
+                                                {
+                                                    "type": "hidden",
+                                                    "name": "number",
                                                 },
                                             ]
                                         }

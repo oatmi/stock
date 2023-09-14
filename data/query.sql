@@ -33,8 +33,8 @@ WHERE id = $1;
 
 -- name: UpdateStockStatusByID :exec
 UPDATE stocks
-SET status = $1
-WHERE id = $2;
+SET status = $1, price = $2, value = $3
+WHERE id = $4;
 
 -- name: UpdateStockPriceByID :exec
 UPDATE stocks

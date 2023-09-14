@@ -48,7 +48,7 @@ func PutStock(c *gin.Context) {
 		Supplier:         stock.Supplier,
 		Model:            stock.Model,
 		Unit:             stock.Unit,
-		Price:            cast.ToInt32(stock.Price),
+		Price:            0,
 		BatchNoIn:        stock.BatchNoIn,
 		WayIn:            cast.ToInt32(stock.WayIn),
 		Location:         cast.ToInt32(stock.Location),
@@ -59,7 +59,7 @@ func PutStock(c *gin.Context) {
 		StockDate:        int32(time.Now().Unix()),
 		StockNum:         cast.ToInt32(stock.StockNum),
 		CurrentNum:       cast.ToInt32(stock.StockNum),
-		Value:            cast.ToInt32(stock.StockNum) * cast.ToInt32(stock.Price),
+		Value:            0,
 	}
 	newStock, err := query.CreateStock(c, createParam)
 	if err != nil {
