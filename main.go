@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
-	"github.com/oatmi/stock/data/account"
 	"github.com/oatmi/stock/handlers"
 )
 
@@ -15,8 +14,17 @@ func main() {
 
 	router.LoadHTMLGlob("template/*")
 
-	view := router.Group("/view", gin.BasicAuth(account.Accounts))
+	v := router.Group("/v")
 	{
+		v.GET("/login", func(c *gin.Context) { c.HTML(http.StatusOK, "login.html", nil) })
+		v.POST("/api/login", handlers.Login)
+	}
+
+	// view := router.Group("/view", gin.BasicAuth(account.Accounts))
+
+	view := router.Group("/view", StockAuth())
+	{
+		view.GET("/home", func(c *gin.Context) { c.HTML(http.StatusOK, "home.html", nil) })
 		view.GET("/stock", func(c *gin.Context) { c.HTML(http.StatusOK, "stock.html", nil) })
 		view.GET("/in", func(c *gin.Context) { c.HTML(http.StatusOK, "in.html", nil) })
 		view.GET("/app", func(c *gin.Context) { c.HTML(http.StatusOK, "application.html", nil) })
@@ -25,7 +33,7 @@ func main() {
 		view.GET("/price", func(c *gin.Context) { c.HTML(http.StatusOK, "price.html", nil) })
 	}
 
-	api := router.Group("/api", gin.BasicAuth(account.Accounts))
+	api := router.Group("/api", StockAuth())
 	{
 		api.GET("/home", handlers.GetStocks)
 		api.GET("/instock", handlers.GetApplications)
@@ -44,4 +52,14 @@ func main() {
 	data.SqliteMustInit()
 
 	router.Run("0.0.0.0:8888")
+}
+
+func StockAuth() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		cookie, err := ctx.Cookie("stock_un")
+		if err != nil || cookie == "" {
+			ctx.Redirect(http.StatusTemporaryRedirect, "/v/login")
+			ctx.AbortWithStatus(http.StatusTemporaryRedirect)
+		}
+	}
 }

@@ -1,41 +1,44 @@
 package handlers
 
 import (
-	"fmt"
-	"net/url"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/oatmi/stock/wechat"
+	"github.com/oatmi/stock/data/account"
 )
 
 const (
 	CorpID = "ww0980d2723fb39cdb"
 )
 
+type LoginRequest struct {
+	User     string `json:"user"`
+	Password string `json:"password"`
+}
+
 // Login 系统入口
 //
 // https://developer.work.weixin.qq.com/document/path/98151
 func Login(ctx *gin.Context) {
-	loginHandleURL := "http://test.stock.com:8888/view/login_callback"
-	param := url.Values{}
-	param.Add("login_type", "CorpApp")
-	param.Add("agentid", "1000024")
-	param.Add("appid", CorpID)
-	param.Add("redirect_uri", loginHandleURL)
-	URL := "https://login.work.weixin.qq.com/wwlogin/sso/login?" + param.Encode()
-	fmt.Printf("debug: %+v\n", URL)
-	ctx.Redirect(302, URL)
-}
+	var login LoginRequest
+	err := ctx.BindJSON(&login)
+	if err != nil {
+		ctx.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E100] 参数错误"})
+		return
+	}
 
-func LoginSuncess(ctx *gin.Context) {
-	code := ctx.Query("code")
-	fmt.Printf("debug: %+v\n", code)
+	for u, p := range account.Accounts {
+		if u == login.User {
+			if p == login.Password {
+				ctx.SetCookie("stock_un", login.User, 86400, "/", ctx.Request.Host, false, true)
+				ctx.JSON(http.StatusOK, AisudaiResponse{})
+				return
+			} else {
+				ctx.JSON(http.StatusUnauthorized, AisudaiResponse{Status: 1, Message: "账号密码错误"})
+				return
+			}
+		}
+	}
 
-	at, err := wechat.AccessToken(ctx)
-	fmt.Printf("debug: %+v\n", at)
-	fmt.Printf("debug: %+v\n", err)
-
-	userID, err := wechat.GetUserID(ctx, at, code)
-	fmt.Printf("debug: %+v\n", userID)
-	fmt.Printf("debug: %+v\n", err)
+	ctx.JSON(http.StatusUnauthorized, AisudaiResponse{Status: 1, Message: "账号密码错误"})
 }

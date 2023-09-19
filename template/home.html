@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>库存管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="stylesheet" href="/sdk/sdk.css" />
+    <link rel="stylesheet" href="/sdk/helper.css" />
+    <link rel="stylesheet" href="/sdk/iconfont.css" />
+    <style>
+      html,
+      body,
+      .app-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="root" class="app-wrapper"></div>
+    
+    <script src="/sdk/sdk.js"></script>
+    <script type="text/javascript">
+      (function () {
+        let amis = amisRequire("amis/embed");
+        let amisJSON = {
+            "type": "page",
+            "data":
+            {
+                "nav":
+                [
+                    {
+                        "label": "库存管理",
+                        "to": "/view/stock",
+                        "icon": "fa fa-boxes-stacked"
+                    },
+                    {
+                        "label": "入库管理",
+                        "to": "/view/in",
+                        "icon": "fa fa-inbox"
+                    },
+                    {
+                        "label": "出库管理",
+                        "to": "/view/out",
+                        "icon": "fa fa-right-from-bracket"
+                    },
+                    {
+                        "label": "出库审核",
+                        "to": "/view/out_approve",
+                        "icon": "fa fa-right-from-bracket"
+                    },
+                    {
+                        "label": "定价管理",
+                        "to": "/view/price",
+                        "icon": "fa fa-tag"
+                    }
+                ], 
+            },
+            "body":
+            [
+                {
+                    "type": "nav",
+                    "stacked": false,
+                    // "source": "${nav}"
+                    "source": "/api/navs"
+                },
+            ]
+        }
+        let amisScoped = amis.embed("#root", amisJSON);
+      })();
+    </script>
+  </body>
+</html>
