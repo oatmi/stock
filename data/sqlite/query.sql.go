@@ -484,49 +484,52 @@ func (q *Queries) StocksByID(ctx context.Context, id int32) (Stock, error) {
 
 const updateApplicationIN = `-- name: UpdateApplicationIN :exec
 UPDATE stock_applications
-SET status = $1
-WHERE id = $2
+SET status = $1, approve_user = $2
+WHERE id = $3
 `
 
 type UpdateApplicationINParams struct {
-	Status int32 `json:"status"`
-	ID     int32 `json:"id"`
+	Status      int32  `json:"status"`
+	ApproveUser string `json:"approve_user"`
+	ID          int32  `json:"id"`
 }
 
 func (q *Queries) UpdateApplicationIN(ctx context.Context, arg UpdateApplicationINParams) error {
-	_, err := q.db.ExecContext(ctx, updateApplicationIN, arg.Status, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateApplicationIN, arg.Status, arg.ApproveUser, arg.ID)
 	return err
 }
 
 const updateApplicationOUT = `-- name: UpdateApplicationOUT :exec
 UPDATE stock_out_applications
-SET status = $1
-WHERE id = $2
+SET status = $1, approve_user = $2
+WHERE id = $3
 `
 
 type UpdateApplicationOUTParams struct {
-	Status int32 `json:"status"`
-	ID     int32 `json:"id"`
+	Status      int32  `json:"status"`
+	ApproveUser string `json:"approve_user"`
+	ID          int32  `json:"id"`
 }
 
 func (q *Queries) UpdateApplicationOUT(ctx context.Context, arg UpdateApplicationOUTParams) error {
-	_, err := q.db.ExecContext(ctx, updateApplicationOUT, arg.Status, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateApplicationOUT, arg.Status, arg.ApproveUser, arg.ID)
 	return err
 }
 
 const updateStockNumber = `-- name: UpdateStockNumber :exec
 UPDATE stocks
-SET current_num = $1
-WHERE id = $2
+SET current_num = $1, value = $2
+WHERE id = $3
 `
 
 type UpdateStockNumberParams struct {
 	CurrentNum int32 `json:"current_num"`
+	Value      int32 `json:"value"`
 	ID         int32 `json:"id"`
 }
 
 func (q *Queries) UpdateStockNumber(ctx context.Context, arg UpdateStockNumberParams) error {
-	_, err := q.db.ExecContext(ctx, updateStockNumber, arg.CurrentNum, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateStockNumber, arg.CurrentNum, arg.Value, arg.ID)
 	return err
 }
 

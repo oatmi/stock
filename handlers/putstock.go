@@ -39,6 +39,7 @@ func PutStock(c *gin.Context) {
 		return
 	}
 
+	batchNO := lib.NewBatchNO()
 	query := sqlite.New(data.Sqlite3)
 	createParam := sqlite.CreateStockParams{
 		Status:           2, // 1: ok, 2: waitIN, 3: outed 4: declined
@@ -49,7 +50,7 @@ func PutStock(c *gin.Context) {
 		Model:            stock.Model,
 		Unit:             stock.Unit,
 		Price:            0,
-		BatchNoIn:        stock.BatchNoIn,
+		BatchNoIn:        batchNO,
 		WayIn:            cast.ToInt32(stock.WayIn),
 		Location:         cast.ToInt32(stock.Location),
 		BatchNoProduce:   stock.BatchNoProduce,
@@ -70,9 +71,9 @@ func PutStock(c *gin.Context) {
 	application := sqlite.CreateStockApplicationParams{
 		StockID:         newStock.ID,
 		ApplicationDate: lib.CurrentDate(),
-		BatchNoIn:       lib.NewBatchNO(),
-		Status:          1,       // 1: initiate, 2: wait approve, 3: prooved, 4: rejected
-		ApplicationUser: "admin", // TODO
+		BatchNoIn:       batchNO,
+		Status:          1, // 1: initiate, 2: wait approve, 3: prooved, 4: rejected
+		ApplicationUser: lib.UserName(c),
 		CreateDate:      lib.CurrentDate(),
 	}
 	err = query.CreateStockApplication(c, application)

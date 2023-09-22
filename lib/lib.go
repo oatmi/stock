@@ -3,6 +3,8 @@ package lib
 import (
 	"encoding/json"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // CurrentDate 返回当前时间的日期
@@ -30,4 +32,13 @@ func ConvertTo(in, out interface{}) error {
 // 当前日期数字表示
 func NewBatchNO() string {
 	return time.Now().Format("20060102150405")
+}
+
+// UserName 从Cookie获取用户名
+func UserName(c *gin.Context) string {
+	name, err := c.Cookie("stock_un")
+	if err != nil {
+		return ""
+	}
+	return name
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
+	"github.com/oatmi/stock/lib"
 )
 
 type ApproveOutRequest struct {
@@ -52,6 +53,7 @@ func ApproveOut(c *gin.Context) {
 		updateStockParam := sqlite.UpdateStockNumberParams{
 			CurrentNum: left,
 			ID:         int32(req.StockID),
+			Value:      stock.Price * left,
 		}
 		err := query.UpdateStockNumber(c, updateStockParam)
 		if err != nil {
@@ -60,8 +62,9 @@ func ApproveOut(c *gin.Context) {
 		}
 
 		updateApproveParam := sqlite.UpdateApplicationOUTParams{
-			Status: 3,
-			ID:     int32(req.ID),
+			Status:      3,
+			ID:          int32(req.ID),
+			ApproveUser: lib.UserName(c),
 		}
 		err = query.UpdateApplicationOUT(c, updateApproveParam)
 		if err != nil {
@@ -70,8 +73,9 @@ func ApproveOut(c *gin.Context) {
 		}
 	} else {
 		updateApproveParam := sqlite.UpdateApplicationOUTParams{
-			Status: 4,
-			ID:     int32(req.ID),
+			Status:      4,
+			ID:          int32(req.ID),
+			ApproveUser: lib.UserName(c),
 		}
 		err = query.UpdateApplicationOUT(c, updateApproveParam)
 		if err != nil {

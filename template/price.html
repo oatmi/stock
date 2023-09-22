@@ -94,40 +94,30 @@
                             }
                         },
                         {
-                            "name": "type",
+                            "name": "product_type",
                             "label": "货品类型",
                             "type": "mapping",
-                            "map": {
-                                "1": "其他",
-                                "2": "面料",
-                                "3": "双面胶",
-                                "4": "标签",
-                                "5": "胶条",
-                                "6": "包材",
-                                "7": "纸箱",
-                                "8": "口罩",
-                                "9": "采样器",
-                                "10": "线",
-                            },
-                            "searchable":
-                            {
+                            "searchable": {
                                 "type": "select",
-                                "name": "type",
+                                "name": "product_type",
                                 "label": "货品类型",
-                                "options":
-                                [
-                                    { "label": "其他", "value": "1" },
-                                    { "label": "面料", "value": "2" },
-                                    { "label": "双面胶", "value": "3" },
-                                    { "label": "标签", "value": "4" },
-                                    { "label": "胶条", "value": "5" },
-                                    { "label": "包材", "value": "6" },
-                                    { "label": "纸箱", "value": "7" },
-                                    { "label": "口罩", "value": "8" },
-                                    { "label": "采样器", "value": "9" },
-                                    { "label": "线", "value": "10" },
-                                ]
-                            }
+                                "options": [
+                                    { "label": "主材", "value": "1" },
+                                    { "label": "辅材", "value": "2" },
+                                    { "label": "半成品", "value": "3" },
+                                    { "label": "成品", "value": "4" },
+                                    { "label": "鸡货", "value": "5" },
+                                    { "label": "报废品", "value": "6" },
+                                  ]
+                            },
+                            "map": {
+                                "1": "<span class='label label-info'>主材</span>",
+                                "2": "<span class='label label-success'>辅材</span>",
+                                "3": "<span class='label label-danger'>半成品</span>",
+                                "4": "<span class='label label-warning'>成品</span>",
+                                "5": "<span class='label label-default'>鸡货</span>",
+                                "6": "<span class='label label-info'>报废品</span>",
+                            },
                         },
                         {
                             "name": "supplier",
@@ -152,6 +142,13 @@
                         {
                             "name": "way_in",
                             "label": "入库方式",
+                            "type": "mapping",
+                            "map": {
+                                "1": "客供",
+                                "2": "期初",
+                                "3": "外发",
+                                "4": "外购",
+                            },
                         },
                         {
                             "name": "location",

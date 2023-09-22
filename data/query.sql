@@ -24,8 +24,8 @@ WHERE batch_no_in = $2 and status = $3;
 
 -- name: UpdateStockNumber :exec
 UPDATE stocks
-SET current_num = $1
-WHERE id = $2;
+SET current_num = $1, value = $2
+WHERE id = $3;
 
 -- name: StocksByID :one
 SELECT * FROM stocks
@@ -79,8 +79,8 @@ VALUES ($1,$2,$3,$4,$5,$6,$7,$8);
 
 -- name: UpdateApplicationIN :exec
 UPDATE stock_applications
-SET status = $1
-WHERE id = $2;
+SET status = $1, approve_user = $2
+WHERE id = $3;
 
 -- name: CreateOutApplication :exec
 INSERT INTO stock_out_applications (
@@ -109,8 +109,8 @@ WHERE
 
 -- name: UpdateApplicationOUT :exec
 UPDATE stock_out_applications
-SET status = $1
-WHERE id = $2;
+SET status = $1, approve_user = $2
+WHERE id = $3;
 
 -- name: OutApplicationByID :one
 SELECT * FROM stock_out_applications

@@ -16,7 +16,15 @@ func main() {
 
 	v := router.Group("/v")
 	{
-		v.GET("/login", func(c *gin.Context) { c.HTML(http.StatusOK, "login.html", nil) })
+		v.GET("/login", func(c *gin.Context) {
+			cookie, err := c.Cookie("stock_un")
+			if err == nil && cookie != "" {
+				c.HTML(http.StatusOK, "home.html", nil)
+			} else {
+				c.HTML(http.StatusOK, "login.html", nil)
+			}
+		})
+
 		v.POST("/api/login", handlers.Login)
 	}
 

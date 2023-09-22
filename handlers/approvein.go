@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
+	"github.com/oatmi/stock/lib"
 	"github.com/spf13/cast"
 )
 
@@ -52,8 +53,9 @@ func ApproveIN(c *gin.Context) {
 		}
 
 		updateApproveParam := sqlite.UpdateApplicationINParams{
-			Status: 3,
-			ID:     int32(req.ID),
+			Status:      3,
+			ID:          int32(req.ID),
+			ApproveUser: lib.UserName(c),
 		}
 		err = query.UpdateApplicationIN(c, updateApproveParam)
 		if err != nil {
@@ -72,8 +74,9 @@ func ApproveIN(c *gin.Context) {
 		}
 
 		updateApproveParam := sqlite.UpdateApplicationINParams{
-			Status: 4,
-			ID:     int32(req.ID),
+			Status:      4,
+			ApproveUser: lib.UserName(c),
+			ID:          int32(req.ID),
 		}
 		err = query.UpdateApplicationIN(c, updateApproveParam)
 		if err != nil {

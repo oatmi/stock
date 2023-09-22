@@ -111,16 +111,16 @@
                                     { "label": "辅材", "value": "2" },
                                     { "label": "半成品", "value": "3" },
                                     { "label": "成品", "value": "4" },
-                                    { "label": "机货", "value": "5" },
+                                    { "label": "鸡货", "value": "5" },
                                     { "label": "报废品", "value": "6" },
                                   ]
                             },
                             "map": {
                                 "1": "<span class='label label-info'>主材</span>",
-                                "2": "<span class='label label-info'>辅材</span>",
-                                "3": "<span class='label label-info'>半成品</span>",
-                                "4": "<span class='label label-info'>成品</span>",
-                                "5": "<span class='label label-info'>机货</span>",
+                                "2": "<span class='label label-success'>辅材</span>",
+                                "3": "<span class='label label-danger'>半成品</span>",
+                                "4": "<span class='label label-warning'>成品</span>",
+                                "5": "<span class='label label-default'>鸡货</span>",
                                 "6": "<span class='label label-info'>报废品</span>",
                             },
                         },
@@ -157,6 +157,13 @@
                         {
                             "name": "way_in",
                             "label": "入库方式",
+                            "type": "mapping",
+                            "map": {
+                                "1": "客供",
+                                "2": "期初",
+                                "3": "外发",
+                                "4": "外购",
+                            },
                         },
                         {
                             "name": "location",
@@ -200,7 +207,7 @@
                         {
                             "name": "stock_date",
                             "label": "入库时间",
-                            "format": "YYYY年MM月DD日",
+                            "format": "YYYY年MM月DD日 HH:mm:ss",
                             "type": "date",
                         },
                         {

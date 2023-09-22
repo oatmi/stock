@@ -41,8 +41,8 @@ func OutStockCreate(c *gin.Context) {
 		Stockids:        cast.ToString(stocks.ID),
 		Number:          int32(stocks.Number),
 		Status:          2,
-		ApplicationUser: "admin",
-		ApproveUser:     "yangtao",
+		ApplicationUser: lib.UserName(c),
+		ApproveUser:     "",
 		CreateDate:      lib.CurrentDate(),
 	}
 	err = query.CreateOutApplication(c, param)

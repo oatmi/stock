@@ -90,7 +90,7 @@
                                                     "options": {
                                                         "1": "医疗器械",
                                                         "2": "非医疗器械",
-                                                        "3": "健康产品",
+                                                        // "3": "健康产品",
                                                     },
                                                 },
                                             ]
@@ -176,21 +176,19 @@
                                                     "name": "batch_no_produce",
                                                     "required": true,
                                                     "label": "生产批号",
-                                                    "hiddenOn": "this.product_type!=4",
                                                 },
                                                 {
                                                     "type": "input-date",
                                                     "name": "produce_date",
                                                     "required": true,
                                                     "label": "生产日期",
-                                                    "hiddenOn": "this.product_type!=4",
                                                 },
                                                 {
                                                     "type": "input-text",
                                                     "name": "disinfection_no",
                                                     "required": true,
                                                     "label": "灭菌批号",
-                                                    "hiddenOn": "this.product_attr!=1",
+                                                    "hiddenOn": "this.product_attr!=1 || this.product_type!=4",
                                                 },
                                                 
                                             ]
@@ -203,7 +201,7 @@
                                                     "name": "disinfection_date",
                                                     "required": true,
                                                     "label": "灭菌日期",
-                                                    "hiddenOn": "this.product_attr!=1",
+                                                    "hiddenOn": "this.product_attr!=1 || this.product_type!=4",
                                                 },
                                             ]
                                         }
@@ -334,6 +332,7 @@
                                                     "type": "input-number",
                                                     "name": "price",
                                                     "label": "单价(单位分)",
+                                                    "required": true,
                                                 },
                                                 {
                                                     "type": "hidden",
