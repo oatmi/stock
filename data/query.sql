@@ -4,6 +4,7 @@ FROM stocks
 WHERE
   (name LIKE sqlc.narg('name') OR sqlc.narg('name') IS NULL) AND
   (product_type = sqlc.narg('product_type') OR sqlc.narg('product_type') IS NULL) AND
+  (product_attr = sqlc.narg('product_attr') OR sqlc.narg('product_attr') IS NULL) AND
   (status = sqlc.narg('status') OR sqlc.narg('status') IS NULL)
 ORDER BY id DESC 
 LIMIT sqlc.narg('limit')

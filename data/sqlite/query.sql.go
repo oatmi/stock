@@ -365,15 +365,17 @@ FROM stocks
 WHERE
   (name LIKE $1 OR $1 IS NULL) AND
   (product_type = $2 OR $2 IS NULL) AND
-  (status = $3 OR $3 IS NULL)
+  (product_attr = $3 OR $3 IS NULL) AND
+  (status = $4 OR $4 IS NULL)
 ORDER BY id DESC 
-LIMIT $5
-OFFSET $4
+LIMIT $6
+OFFSET $5
 `
 
 type ListStocksParams struct {
 	Name        sql.NullString `json:"name"`
 	ProductType sql.NullInt32  `json:"product_type"`
+	ProductAttr sql.NullInt32  `json:"product_attr"`
 	Status      sql.NullInt32  `json:"status"`
 	Offset      sql.NullInt32  `json:"offset"`
 	Limit       sql.NullInt32  `json:"limit"`
@@ -383,6 +385,7 @@ func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock
 	rows, err := q.db.QueryContext(ctx, listStocks,
 		arg.Name,
 		arg.ProductType,
+		arg.ProductAttr,
 		arg.Status,
 		arg.Offset,
 		arg.Limit,

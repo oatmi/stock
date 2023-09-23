@@ -75,6 +75,12 @@ func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {
 			Valid: true,
 		}
 	}
+	if val, ok := c.GetQuery("product_attr"); ok && val != "" {
+		arg.ProductAttr = sql.NullInt32{
+			Int32: cast.ToInt32(val),
+			Valid: true,
+		}
+	}
 	if val, ok := c.GetQuery("status"); ok && val != "" {
 		arg.Status = sql.NullInt32{
 			Int32: cast.ToInt32(val),
