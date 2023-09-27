@@ -157,10 +157,6 @@
                             "label": "单位"
                         },
                         {
-                            "name": "price",
-                            "label": "货品单价"
-                        },
-                        {
                             "name": "batch_no_in",
                             "label": "入库批号",
                         },
@@ -229,9 +225,14 @@
                             "label": "库存数量"
                         },
                         {
+                            "name": "price",
+                            "label": "货品单价",
+                            "hiddenOn": "show_price!=1",
+                        },
+                        {
                             "name": "value",
                             "label": "当前价值",
-                            "hiddenOn": "current_num==212",
+                            "hiddenOn": "show_value!=1",
                         },
                     ],
                 }

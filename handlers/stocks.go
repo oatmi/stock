@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
+	"github.com/oatmi/stock/lib"
 	"github.com/spf13/cast"
 )
 
@@ -20,6 +22,12 @@ type AisudaiResponse struct {
 type AisudaiCRUDData struct {
 	Count int         `json:"count"`
 	Rows  interface{} `json:"rows"`
+}
+
+type StockItem struct {
+	sqlite.Stock
+	ShowValue int `json:"show_value"`
+	ShowPrice int `json:"show_price"`
 }
 
 // GetStocks 获取库存数据
@@ -47,7 +55,28 @@ func GetStocks(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: list})
+	resp := []StockItem{}
+	for _, stock := range list {
+		stockItem := StockItem{
+			Stock:     stock,
+			ShowPrice: 0,
+			ShowValue: 0,
+		}
+
+		if strings.Contains("chengnanyu,wangbo,likaihou,chenyu", lib.UserName(c)) {
+			stockItem.ShowValue = 1
+			stockItem.ShowPrice = 1
+		}
+
+		if stock.ProductType == 4 && lib.UserName(c) == "zhangling" {
+			stockItem.ShowValue = 1
+			stockItem.ShowPrice = 1
+		}
+
+		resp = append(resp, stockItem)
+	}
+
+	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: resp})
 	return
 }
 
