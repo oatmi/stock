@@ -24,6 +24,10 @@ func main() {
 				c.HTML(http.StatusOK, "login.html", nil)
 			}
 		})
+		v.GET("/logout", func(c *gin.Context) {
+			c.SetCookie("stock_un", "", 86400, "/", c.Request.Host, false, true)
+			c.HTML(http.StatusOK, "login.html", nil)
+		})
 
 		v.POST("/api/login", handlers.Login)
 	}

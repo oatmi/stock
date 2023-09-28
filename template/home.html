@@ -70,6 +70,67 @@
                     // "source": "${nav}"
                     "source": "/api/navs"
                 },
+                {
+                  "type": "page",
+                  "title": "功能信息区",
+                  "body": {
+                    "type": "button-toolbar",
+                    "buttons": [
+                      // {
+                      //   "type": "button",
+                      //   "label": "默认"
+                      // },
+                      // {
+                      //   "type": "button",
+                      //   "label": "主要",
+                      //   "level": "primary"
+                      // },
+                      // {
+                      //   "type": "button",
+                      //   "label": "次要",
+                      //   "level": "secondary"
+                      // },
+                      // {
+                      //   "type": "button",
+                      //   "label": "信息",
+                      //   "level": "info"
+                      // },
+                      // {
+                      //   "type": "button",
+                      //   "label": "成功",
+                      //   "level": "success"
+                      // },
+                      // {
+                      //   "type": "button",
+                      //   "label": "警告",
+                      //   "level": "warning"
+                      // },
+                      {
+                        "type": "button",
+                        "label": "退出登录",
+                        "actionType": "url",
+                        "level": "danger",
+                        "url": "/v/logout",
+                        "blank": false,
+                      },
+                      // {
+                      //   "type": "button",
+                      //   "label": "浅色",
+                      //   "level": "light"
+                      // },
+                      // {
+                      //   "type": "button",
+                      //   "label": "深色",
+                      //   "level": "dark"
+                      // },
+                      // {
+                      //   "type": "button",
+                      //   "label": "链接",
+                      //   "level": "link"
+                      // }
+                    ]
+                 }
+              }
             ]
         }
         let amisScoped = amis.embed("#root", amisJSON);
