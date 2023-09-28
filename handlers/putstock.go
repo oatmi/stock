@@ -68,12 +68,18 @@ func PutStock(c *gin.Context) {
 		return
 	}
 
+	approveUser := "chenhua"
+	if newStock.ProductType == 1 || newStock.ProductType == 2 {
+		approveUser = "zhouxiaoli"
+	}
+
 	application := sqlite.CreateStockApplicationParams{
 		StockID:         newStock.ID,
 		ApplicationDate: lib.CurrentDate(),
 		BatchNoIn:       batchNO,
 		Status:          1, // 1: initiate, 2: wait approve, 3: prooved, 4: rejected
 		ApplicationUser: lib.UserName(c),
+		ApproveUser:     approveUser,
 		CreateDate:      lib.CurrentDate(),
 	}
 	err = query.CreateStockApplication(c, application)

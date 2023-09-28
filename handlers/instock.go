@@ -25,6 +25,7 @@ type ApplicationItem struct {
 	ApproveUser     string `json:"approve_user"`
 	ApproveDate     string `json:"approve_date"`
 	CreateDate      string `json:"create_date"`
+	CanApprove      int    `json:"can_approve"`
 }
 
 // GetStocks 获取库存数据
@@ -65,7 +66,7 @@ func GetApplications(c *gin.Context) {
 			continue
 		}
 
-		resp = append(resp, ApplicationItem{
+		item := ApplicationItem{
 			ID:              s.ID,
 			StockName:       stock.Name,
 			StockID:         s.StockID,
@@ -77,7 +78,14 @@ func GetApplications(c *gin.Context) {
 			ApproveUser:     s.ApproveUser,
 			ApproveDate:     s.ApproveDate,
 			CreateDate:      s.CreateDate,
-		})
+			CanApprove:      0,
+		}
+
+		if lib.UserName(c) == s.ApproveUser {
+			item.CanApprove = 1
+		}
+
+		resp = append(resp, item)
 	}
 
 	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: resp})

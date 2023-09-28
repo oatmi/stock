@@ -74,34 +74,13 @@
                         },
                         {
                             "name": "product_type",
-                            "label": "成品类型",
-                            "type": "mapping",
-                            "map": {
-                                "1": "<span class='label label-info'>原材料</span>",
-                                "2": "<span class='label label-success'>成品</span>",
-                                "*": "<span class='label label-warning'>其他</span>",
-                            },
-                            "searchable":
-                            {
-                                "type": "hidden",
-                                "name": "product_type",
-                                "label": "成品类型",
-                                "value": 2,
-                                "options":
-                                [
-                                    { "label": "原材料", "value": "1" },
-                                    { "label": "成品", "value": "2"},
-                                ]
-                            }
-                        },
-                        {
-                            "name": "product_type",
                             "label": "货品类型",
                             "type": "mapping",
                             "searchable": {
-                                "type": "select",
+                                "type": "hidden",
                                 "name": "product_type",
                                 "label": "货品类型",
+                                "value": 4,
                                 "options": [
                                     { "label": "主材", "value": "1" },
                                     { "label": "辅材", "value": "2" },
@@ -118,6 +97,26 @@
                                 "4": "<span class='label label-warning'>成品</span>",
                                 "5": "<span class='label label-default'>鸡货</span>",
                                 "6": "<span class='label label-info'>报废品</span>",
+                            },
+                        },
+                        {
+                            "name": "product_attr",
+                            "label": "货品属性",
+                            "type": "mapping",
+                            "map": {
+                                "1": "<span class='label label-info'>医疗器械</span>",
+                                "2": "<span class='label label-info'>非医疗器械</span>",
+                                "3": "<span class='label label-info'>健康产品</span>",
+                            },
+                            "searchable": {
+                                "type": "select",
+                                "name": "product_attr",
+                                "label": "货品属性",
+                                "options": [
+                                    { "label": "医疗器械", "value": "1" },
+                                    { "label": "非医疗器械", "value": "2" },
+                                    { "label": "健康产品", "value": "3" },
+                                  ]
                             },
                         },
                         {
