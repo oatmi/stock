@@ -1,11 +1,14 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oatmi/stock/data"
 	"github.com/oatmi/stock/data/sqlite"
+	"github.com/oatmi/stock/lib"
+	"github.com/oatmi/stock/wechat"
 )
 
 type AlterPriceRequest struct {
@@ -42,6 +45,12 @@ func AlterPrice(c *gin.Context) {
 		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "[E101] 更新价格失败"})
 		return
 	}
+
+	message := wechat.Text{
+		Content: fmt.Sprintf("【通知】%s修改了%s的价格。", lib.UserName(c), stock.Name),
+	}
+
+	wechat.SendTextMessage(c, wechatBotWebHook, message)
 
 	c.JSON(http.StatusOK, nil)
 }
