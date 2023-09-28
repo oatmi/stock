@@ -51,12 +51,14 @@ func Navs(c *gin.Context) {
 	} else if userName == "zhouxiaoli" {
 		nav := []Nav{
 			{Label: userName, To: "/view/home", Icon: "fa fa-user"},
+			{Label: "库存管理", To: "/view/stock", Icon: "fa fa-boxes-stacked"},
 			{Label: "入库管理", To: "/view/in", Icon: "fa fa-inbox"},
 		}
 		c.JSON(http.StatusOK, AisudaiResponse{Data: nav})
 	} else if userName == "zhangling" {
 		nav := []Nav{
 			{Label: userName, To: "/view/home", Icon: "fa fa-user"},
+			{Label: "库存管理", To: "/view/stock", Icon: "fa fa-boxes-stacked"},
 			{Label: "入库管理", To: "/view/in", Icon: "fa fa-inbox"},
 			{Label: "出库审核", To: "/view/out_approve", Icon: "fa fa-right-from-bracket"},
 			{Label: "定价管理", To: "/view/price", Icon: "fa fa-tag"},
@@ -65,6 +67,7 @@ func Navs(c *gin.Context) {
 	} else if userName == "chenhua" {
 		nav := []Nav{
 			{Label: userName, To: "/view/home", Icon: "fa fa-user"},
+			{Label: "库存管理", To: "/view/stock", Icon: "fa fa-boxes-stacked"},
 			{Label: "入库管理", To: "/view/in", Icon: "fa fa-inbox"},
 		}
 		c.JSON(http.StatusOK, AisudaiResponse{Data: nav})
