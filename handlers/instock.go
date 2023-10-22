@@ -89,7 +89,6 @@ func GetApplications(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: resp})
-	return
 }
 
 // buildApplicationParams 构建入库申请查询参数

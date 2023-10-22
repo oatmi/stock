@@ -26,8 +26,6 @@ type AisudaiCRUDData struct {
 
 type StockItem struct {
 	sqlite.Stock
-	ShowValue int `json:"show_value"`
-	ShowPrice int `json:"show_price"`
 }
 
 // GetStocks 获取库存数据
@@ -58,26 +56,22 @@ func GetStocks(c *gin.Context) {
 	resp := []StockItem{}
 	for _, stock := range list {
 		stockItem := StockItem{
-			Stock:     stock,
-			ShowPrice: 0,
-			ShowValue: 0,
+			Stock: stock,
 		}
 
-		if strings.Contains("chengnanyu,wangbo,likaihou,chenyu", lib.UserName(c)) {
-			stockItem.ShowValue = 1
-			stockItem.ShowPrice = 1
-		}
-
-		if stock.ProductType == 4 && lib.UserName(c) == "zhangling" {
-			stockItem.ShowValue = 1
-			stockItem.ShowPrice = 1
+		if !strings.Contains("chengnanyu,wangbo,likaihou,chenyu", lib.UserName(c)) {
+			if stock.ProductType == 4 && lib.UserName(c) == "zhangling" {
+				// Do Noting ...
+			} else {
+				stockItem.Value = 0
+				stockItem.Price = 0
+			}
 		}
 
 		resp = append(resp, stockItem)
 	}
 
 	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: resp})
-	return
 }
 
 func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {

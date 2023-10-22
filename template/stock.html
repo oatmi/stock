@@ -1,243 +1,244 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <title>库存管理</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="stylesheet" href="/sdk/sdk.css" />
     <link rel="stylesheet" href="/sdk/helper.css" />
     <link rel="stylesheet" href="/sdk/iconfont.css" />
     <style>
-      html,
-      body,
-      .app-wrapper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+        html,
+        body,
+        .app-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
 
     <div id="root" class="app-wrapper"></div>
-    
+
     <script src="/sdk/sdk.js"></script>
     <script type="text/javascript">
-      (function () {
-        let amis = amisRequire("amis/embed");
-        let amisJSON = {
-            "type": "page",
-            "data":
-            {
-                "nav":
-                [
-                    {
-                        "label": "库存管理",
-                        "to": "/view/stock",
-                        "icon": "fa fa-boxes-stacked"
-                    },
-                    {
-                        "label": "入库管理",
-                        "to": "/view/in",
-                        "icon": "fa fa-inbox"
-                    },
-                    {
-                        "label": "出库管理",
-                        "to": "/view/out",
-                        "icon": "fa fa-right-from-bracket"
-                    },
-                    {
-                        "label": "出库审核",
-                        "to": "/view/out_approve",
-                        "icon": "fa fa-right-from-bracket"
-                    },
-                    {
-                        "label": "定价管理",
-                        "to": "/view/price",
-                        "icon": "fa fa-tag"
-                    }
-                ], 
-            },
-            "body":
-            [
+        (function () {
+            let amis = amisRequire("amis/embed");
+            let amisJSON = {
+                "type": "page",
+                "data":
                 {
-                    "type": "nav",
-                    "stacked": false,
-                    // "source": "${nav}"
-                    "source": "/api/navs"
-                },
-                {
-                    "type": "crud",
-                    "api": "/api/home",
-                    "syncLocation": false,
-                    "autoGenerateFilter": true,
-                    "headerToolbar":
-                    [
-                        {
-                            "type": "columns-toggler",
-                            "align": "left",
-                            "draggable": true,
-                            "icon": "fas fa-cog",
-                            "overlay": true,
-                            "footerBtnSize": "sm"
-                        }
-                    ],
-                    "columns":
-                    [
-                        {
-                            "name": "name",
-                            "label": "货品名称",
-                            "searchable":
+                    "nav":
+                        [
                             {
-                                "type": "input-text",
-                                "name": "name",
-                                "label": "货品名称",
+                                "label": "库存管理",
+                                "to": "/view/stock",
+                                "icon": "fa fa-boxes-stacked"
+                            },
+                            {
+                                "label": "入库管理",
+                                "to": "/view/in",
+                                "icon": "fa fa-inbox"
+                            },
+                            {
+                                "label": "出库管理",
+                                "to": "/view/out",
+                                "icon": "fa fa-right-from-bracket"
+                            },
+                            {
+                                "label": "出库审核",
+                                "to": "/view/out_approve",
+                                "icon": "fa fa-right-from-bracket"
+                            },
+                            {
+                                "label": "定价管理",
+                                "to": "/view/price",
+                                "icon": "fa fa-tag"
                             }
+                        ],
+                },
+                "body":
+                    [
+                        {
+                            "type": "nav",
+                            "stacked": false,
+                            // "source": "${nav}"
+                            "source": "/api/navs"
                         },
                         {
-                            "name": "product_type",
-                            "label": "货品类型",
-                            "type": "mapping",
-                            "searchable": {
-                                "type": "select",
-                                "name": "product_type",
-                                "label": "货品类型",
-                                "options": [
-                                    { "label": "主材", "value": "1" },
-                                    { "label": "辅材", "value": "2" },
-                                    { "label": "半成品", "value": "3" },
-                                    { "label": "成品", "value": "4" },
-                                    { "label": "鸡货", "value": "5" },
-                                    { "label": "报废品", "value": "6" },
-                                  ]
-                            },
-                            "map": {
-                                "1": "<span class='label label-info'>主材</span>",
-                                "2": "<span class='label label-success'>辅材</span>",
-                                "3": "<span class='label label-danger'>半成品</span>",
-                                "4": "<span class='label label-warning'>成品</span>",
-                                "5": "<span class='label label-default'>鸡货</span>",
-                                "6": "<span class='label label-info'>报废品</span>",
-                            },
-                        },
-                        {
-                            "name": "product_attr",
-                            "label": "货品属性",
-                            "type": "mapping",
-                            "map": {
-                                "1": "<span class='label label-info'>医疗器械</span>",
-                                "2": "<span class='label label-info'>非医疗器械</span>",
-                            },
-                            "searchable": {
-                                "type": "select",
-                                "name": "product_attr",
-                                "label": "货品属性",
-                                "options": [
-                                    { "label": "医疗器械", "value": "1" },
-                                    { "label": "非医疗器械", "value": "2" },
-                                  ]
-                            },
-                        },
-                        {
-                            "name": "supplier",
-                            "label": "供应商"
-                        },
-                        {
-                            "name": "model",
-                            "label": "规格型号"
-                        },
-                        {
-                            "name": "unit",
-                            "label": "单位"
-                        },
-                        {
-                            "name": "batch_no_in",
-                            "label": "入库批号",
-                        },
-                        {
-                            "name": "way_in",
-                            "label": "入库方式",
-                            "type": "mapping",
-                            "map": {
-                                "1": "客供",
-                                "2": "期初",
-                                "3": "外发",
-                                "4": "外购",
-                            },
-                        },
-                        {
-                            "name": "location",
-                            "label": "存放仓库",
-                            "type": "mapping",
-                            "map": {
-                                "5301": "<span class='label label-info'>5301</span>",
-                                "5302": "<span class='label label-info'>5302</span>",
-                                "5402": "<span class='label label-info'>5402</span>",
-                                "5403": "<span class='label label-info'>5403</span>",
-                                "5404": "<span class='label label-info'>5404</span>",
-                                "5405": "<span class='label label-info'>5405</span>",
-                                "5406": "<span class='label label-info'>5406</span>",
-                                "5407": "<span class='label label-info'>5407</span>",
-                                "5408": "<span class='label label-info'>5408</span>",
-                                "5409": "<span class='label label-info'>5409</span>",
-                                "5410": "<span class='label label-info'>5410</span>",
-                                "5411": "<span class='label label-info'>5411</span>",
-                            },
-                        },
-                        {
-                            "name": "batch_no_produce",
-                            "label": "生产批号",
-                        },
-                        {
-                            "name": "produce_date",
-                            "label": "生产日期",
-                            "format": "YYYY年MM月DD日",
-                            "type": "date",
-                        },
-                        {
-                            "name": "disinfection_no",
-                            "label": "灭菌批号",
-                        },
-                        {
-                            "name": "disinfection_date",
-                            "label": "灭菌日期",
-                            "format": "YYYY年MM月DD日",
-                            "type": "date",
-                        },
-                        {
-                            "name": "stock_date",
-                            "label": "入库时间",
-                            "format": "YYYY年MM月DD日 HH:mm:ss",
-                            "type": "date",
-                        },
-                        {
-                            "name": "stock_num",
-                            "label": "入库数量"
-                        },
-                        {
-                            "name": "current_num",
-                            "label": "库存数量"
-                        },
-                        {
-                            "name": "price",
-                            "label": "货品单价",
-                            "hiddenOn": "show_price!=1",
-                        },
-                        {
-                            "name": "value",
-                            "label": "当前价值",
-                            "hiddenOn": "show_value!=1",
-                        },
-                    ],
-                }
-            ]
-        }
-        let amisScoped = amis.embed("#root", amisJSON);
-      })();
+                            "type": "crud",
+                            "api": "/api/home",
+                            "syncLocation": false,
+                            "autoGenerateFilter": true,
+                            "headerToolbar":
+                                [
+                                    {
+                                        "type": "columns-toggler",
+                                        "align": "left",
+                                        "draggable": true,
+                                        "icon": "fas fa-cog",
+                                        "overlay": true,
+                                        "footerBtnSize": "sm"
+                                    }
+                                ],
+                            "columns":
+                                [
+                                    {
+                                        "name": "name",
+                                        "label": "货品名称",
+                                        "searchable":
+                                        {
+                                            "type": "input-text",
+                                            "name": "name",
+                                            "label": "货品名称",
+                                        }
+                                    },
+                                    {
+                                        "name": "product_type",
+                                        "label": "货品类型",
+                                        "type": "mapping",
+                                        "searchable": {
+                                            "type": "select",
+                                            "name": "product_type",
+                                            "label": "货品类型",
+                                            "options": [
+                                                { "label": "主材", "value": "1" },
+                                                { "label": "辅材", "value": "2" },
+                                                { "label": "半成品", "value": "3" },
+                                                { "label": "成品", "value": "4" },
+                                                { "label": "鸡货", "value": "5" },
+                                                { "label": "报废品", "value": "6" },
+                                            ]
+                                        },
+                                        "map": {
+                                            "1": "<span class='label label-info'>主材</span>",
+                                            "2": "<span class='label label-success'>辅材</span>",
+                                            "3": "<span class='label label-danger'>半成品</span>",
+                                            "4": "<span class='label label-warning'>成品</span>",
+                                            "5": "<span class='label label-default'>鸡货</span>",
+                                            "6": "<span class='label label-info'>报废品</span>",
+                                        },
+                                    },
+                                    {
+                                        "name": "product_attr",
+                                        "label": "货品属性",
+                                        "type": "mapping",
+                                        "map": {
+                                            "1": "<span class='label label-info'>医疗器械</span>",
+                                            "2": "<span class='label label-info'>非医疗器械</span>",
+                                        },
+                                        "searchable": {
+                                            "type": "select",
+                                            "name": "product_attr",
+                                            "label": "货品属性",
+                                            "options": [
+                                                { "label": "医疗器械", "value": "1" },
+                                                { "label": "非医疗器械", "value": "2" },
+                                            ]
+                                        },
+                                    },
+                                    {
+                                        "name": "supplier",
+                                        "label": "供应商"
+                                    },
+                                    {
+                                        "name": "model",
+                                        "label": "规格型号"
+                                    },
+                                    {
+                                        "name": "unit",
+                                        "label": "单位"
+                                    },
+                                    {
+                                        "name": "batch_no_in",
+                                        "label": "入库批号",
+                                    },
+                                    {
+                                        "name": "way_in",
+                                        "label": "入库方式",
+                                        "type": "mapping",
+                                        "map": {
+                                            "1": "客供",
+                                            "2": "期初",
+                                            "3": "外发",
+                                            "4": "外购",
+                                        },
+                                    },
+                                    {
+                                        "name": "location",
+                                        "label": "存放仓库",
+                                        "type": "mapping",
+                                        "map": {
+                                            "5301": "<span class='label label-info'>5301</span>",
+                                            "5302": "<span class='label label-info'>5302</span>",
+                                            "5402": "<span class='label label-info'>5402</span>",
+                                            "5403": "<span class='label label-info'>5403</span>",
+                                            "5404": "<span class='label label-info'>5404</span>",
+                                            "5405": "<span class='label label-info'>5405</span>",
+                                            "5406": "<span class='label label-info'>5406</span>",
+                                            "5407": "<span class='label label-info'>5407</span>",
+                                            "5408": "<span class='label label-info'>5408</span>",
+                                            "5409": "<span class='label label-info'>5409</span>",
+                                            "5410": "<span class='label label-info'>5410</span>",
+                                            "5411": "<span class='label label-info'>5411</span>",
+                                        },
+                                    },
+                                    {
+                                        "name": "batch_no_produce",
+                                        "label": "生产批号",
+                                    },
+                                    {
+                                        "name": "produce_date",
+                                        "label": "生产日期",
+                                        "format": "YYYY年MM月DD日",
+                                        "type": "date",
+                                    },
+                                    {
+                                        "name": "disinfection_no",
+                                        "label": "灭菌批号",
+                                    },
+                                    {
+                                        "name": "disinfection_date",
+                                        "label": "灭菌日期",
+                                        "format": "YYYY年MM月DD日",
+                                        "type": "date",
+                                    },
+                                    {
+                                        "name": "stock_date",
+                                        "label": "入库时间",
+                                        "format": "YYYY年MM月DD日 HH:mm:ss",
+                                        "type": "date",
+                                    },
+                                    {
+                                        "name": "stock_num",
+                                        "label": "入库数量"
+                                    },
+                                    {
+                                        "name": "current_num",
+                                        "label": "库存数量"
+                                    },
+                                    {
+                                        "name": "price",
+                                        "label": "货品单价",
+                                    },
+                                    {
+                                        "name": "value",
+                                        "label": "当前价值",
+                                    },
+                                ],
+                        }
+                    ]
+            }
+            let amisScoped = amis.embed("#root", amisJSON);
+        })();
     </script>
-  </body>
+</body>
+
 </html>

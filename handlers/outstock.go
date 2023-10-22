@@ -85,7 +85,7 @@ func OutStockList(c *gin.Context) {
 	lib.ConvertTo(listParam, &countParam)
 	count, err := query.CountOutApplication(c, countParam)
 
-	if count == 0 {
+	if count == 0 || err != nil {
 		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
 		return
 	}
@@ -111,7 +111,6 @@ func OutStockList(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: resp})
-	return
 }
 
 func buildOutApplicationParams(ctx *gin.Context) sqlite.ListOutApplicationsParams {
