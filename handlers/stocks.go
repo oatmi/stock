@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/csv"
 	"encoding/json"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +15,53 @@ import (
 	"github.com/spf13/cast"
 )
 
+var (
+	funcProductType = func(t int32) string {
+		switch t {
+		case 1:
+			return "主材"
+		case 2:
+			return "辅材"
+		case 3:
+			return "半成品"
+		case 4:
+			return "成品"
+		case 5:
+			return "鸡货"
+		case 6:
+			return "报废品"
+		default:
+			return "其他"
+		}
+	}
+
+	funcProductAttr = func(t int32) string {
+		switch t {
+		case 1:
+			return "医疗器械"
+		case 2:
+			return "非医疗器械"
+		default:
+			return "其他"
+		}
+	}
+
+	funcWayIn = func(t int32) string {
+		switch t {
+		case 1:
+			return "客供"
+		case 2:
+			return "期初"
+		case 3:
+			return "外发"
+		case 4:
+			return "外购"
+		default:
+			return "其他"
+		}
+	}
+)
+
 type AisudaiResponse struct {
 	Status  int         `json:"status"` // 状态码，为0表示成功
 	Message string      `json:"msg"`    // 文案信息
@@ -20,12 +69,99 @@ type AisudaiResponse struct {
 }
 
 type AisudaiCRUDData struct {
-	Count int         `json:"count"`
-	Rows  interface{} `json:"rows"`
+	Count    int         `json:"count"`
+	Download int         `json:"download"`
+	Rows     interface{} `json:"rows"`
 }
 
 type StockItem struct {
 	sqlite.Stock
+}
+
+func ExportStocks(c *gin.Context) {
+	query := sqlite.New(data.Sqlite3)
+
+	listParam := buildListStockParams(c)
+	list, err := query.ListStocks(c, listParam)
+	if err != nil {
+		c.JSON(http.StatusOK, AisudaiResponse{Message: "无数据 " + err.Error()})
+		return
+	}
+	if len(list) == 0 {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
+		return
+	}
+
+	fileName := "/tmp/stock.csv"
+	file, err := os.Create(fileName)
+	if err != nil {
+		c.JSON(http.StatusOK, AisudaiResponse{Status: 1, Message: "无数据"})
+		return
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+
+	// 写入CSV文件的标题行
+	headers := []string{
+		"货品名称",
+		"货品类型",
+		"货品属性",
+		"供应商",
+		"规格型号",
+		"单位",
+		"入库批号",
+		"入库方式",
+		"存放仓库",
+		"生产批号",
+		"生产日期",
+		"灭菌批号",
+		"灭菌日期",
+		"入库时间",
+		"入库数量",
+		"货品单价",
+		"当前价值",
+	}
+	if err := writer.Write(headers); err != nil {
+		c.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	// 将数据写入CSV文件
+	for _, stock := range list {
+		record := []string{
+			stock.Name,
+			funcProductType(stock.ProductType),
+			funcProductAttr(stock.ProductAttr),
+			stock.Supplier,
+			stock.Model,
+			stock.Unit,
+			stock.BatchNoIn,
+			funcWayIn(stock.WayIn),
+			cast.ToString(stock.Location),
+			stock.BatchNoProduce,
+			lib.TimestampToDate(int64(stock.ProduceDate)),
+			stock.DisinfectionNo,
+			lib.TimestampToDate(int64(stock.DisinfectionDate)),
+			lib.TimestampToDate(int64(stock.StockDate)),
+			cast.ToString(stock.StockNum),
+			cast.ToString(stock.CurrentNum),
+			cast.ToString(stock.Price),
+			cast.ToString(stock.Value),
+		}
+
+		if err := writer.Write(record); err != nil {
+			c.JSON(http.StatusInternalServerError, nil)
+			return
+		}
+	}
+
+	writer.Flush()
+
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Type", "text/csv")
+	c.Header("Content-Disposition", "attachment; filename=stock.csv")
+	c.File(fileName)
 }
 
 // GetStocks 获取库存数据
@@ -70,8 +206,12 @@ func GetStocks(c *gin.Context) {
 
 		resp = append(resp, stockItem)
 	}
+	download := 0
+	if strings.Contains("likaihou", lib.UserName(c)) {
+		download = 1
+	}
 
-	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Rows: resp})
+	c.JSON(http.StatusOK, AisudaiCRUDData{Count: int(count), Download: download, Rows: resp})
 }
 
 func buildListStockParams(c *gin.Context) sqlite.ListStocksParams {

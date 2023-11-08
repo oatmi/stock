@@ -48,6 +48,7 @@ func main() {
 	api := router.Group("/api", StockAuth())
 	{
 		api.GET("/home", handlers.GetStocks)
+		api.GET("/export", handlers.ExportStocks)
 		api.GET("/instock", handlers.GetApplications)
 		api.GET("/outstock", handlers.OutStockList)
 		api.GET("/navs", handlers.Navs)
